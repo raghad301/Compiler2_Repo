@@ -1,0 +1,62 @@
+import os
+from flask import Flask, render_template, request, redirect, url_for
+
+app = Flask(__name__)
+
+UPLOAD_FOLDER = 'static/images'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+products = [
+    {'id': 1, 'name': 'Phone', 'price': 500, 'image': 'phone.jpg'},
+    {'id': 2, 'name': 'Headset', 'price': 50, 'image': 'headset.jpg'}
+]
+
+@app.route('/')
+def display_products():
+    return render_template('products.html', products=products)
+
+@app.route('/add', methods=['GET', 'POST'])
+def add_product():
+    if request.method == 'POST':
+        user_name = request.form.get('name')
+        user_price = request.form.get('price')
+        user_details = request.form.get('details')
+
+        file = request.files.get('image')
+
+        if file and file.filename != '':
+            filename = file.filename
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            user_image = filename
+        else:
+            user_image = 'default.jpg'
+
+        ids = [p['id'] for p in products]
+        new_id = max(ids) + 1
+        new_product = {
+            'id': new_id,
+            'name': user_name,
+            'price': user_price,
+            'details': user_details,
+            'image': user_image
+        }
+
+        products.append(new_product)
+
+        return redirect(url_for('display_products'))
+
+    return render_template('add_product.html')
+
+@app.route('/product/<int:product_id>')
+def product_details(product_id):
+    product = next((p for p in products if p['id'] == product_id), None)
+    if product is None:
+        return "Not Found", 404
+    return render_template('product_details.html', product=product)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+

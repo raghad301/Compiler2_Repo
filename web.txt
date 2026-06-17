@@ -1,0 +1,52 @@
+<body>
+    <h1>Inventory Management</h1>
+    {% set p_name = "Samsung S23" %}
+    {% set status = "deleted" %}
+    <div class="status-container">
+        {% if status == "active" %}
+            <div class="item">
+                <p>Product Name: {{ p_name }}</p>
+                <button>Delete Now</button>
+            </div>
+        {% else %}
+            <div class="removed-msg">
+                <p>Attention: This product has been removed.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-container">
+        <h2>Create New Item</h2>
+        {% set preview_name = "Professional Camera" %}
+        {% set preview_price = 1500.0 %}
+        {% set preview_image = "camera.jpg" %}
+        <div class="preview-box">
+            <img src="{{ preview_image }}" />
+            <h3>Product: {{ preview_name }}</h3>
+            <span>Cost: {{ preview_price }} USD</span>
+        </div>
+    </div>
+
+    <div class="checkout-container">
+        {% set original_price = 2000.0 %}
+        {% set discount_rate = 0.15 %}
+        {% set final_price = original_price * (1 - discount_rate) %}
+        <div class="price-tag">
+            <p>Original Price: {{ original_price }} USD</p>
+            {% if final_price < 1800 %}
+                <span class="promo">Great Deal! (Special Offer)</span>
+            {% endif %}
+            <h3>Final Price: {{ final_price }} USD</h3>
+        </div>
+    </div>
+
+    <h1>Global Product Catalog</h1>
+    <div class="gallery">
+        {% for product in products %}
+            <div class="card">
+                <h3>{{ product.p_name }}</h3>
+                <p>Price: {{ product.p_price }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>
