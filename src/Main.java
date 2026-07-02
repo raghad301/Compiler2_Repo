@@ -13,13 +13,13 @@ import parser_pkg.pythonParser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
+import Semantic.SemanticAnalyzer;
 public class Main{
     public static void main(String[] args) {
 
         // Testing python(flask) AST & Symbol Table
 
-        String filePathP = "src/parser_pkg/test.txt";
+        String filePathP = "src/test.txt";
 
         ParseTree tree = null;
         try {
@@ -39,6 +39,14 @@ public class Main{
             System.out.println("\n--- Final Abstract Syntax Tree ---");
             if (astRoot != null) {
                 astRoot.print("");
+                SemanticAnalyzer analyzer = new SemanticAnalyzer();
+                analyzer.analyze(astRoot);
+
+                if (analyzer.hasErrors()) {
+                    System.err.println("Compilation stopped: semantic errors found.");
+                } else {
+                    System.out.println("Semantic analysis completed successfully.");
+                }
             } else {
                 System.out.println("The AST is empty or null.");
             }
@@ -56,41 +64,43 @@ public class Main{
         System.out.println();
 
 
-        
+
         // Testing Jinja2 AST & Symbol Table
+//
+//        WebVisitor visitor = null;
+//        try {
+//
+//            String filePath = "src/web.txt";
+//            String input = new String(Files.readAllBytes(Paths.get(filePath)));
+//
+//            // تنفيذ عملية الـ Parsing كالمعتاد
+//            WebLexer lexer = new WebLexer(CharStreams.fromString(input));
+//            CommonTokenStream tokens = new CommonTokenStream(lexer);
+//            WebParser parser = new WebParser(tokens);
+//            ParseTree jtree = parser.htmlDocument();
+//
+//            visitor = new WebVisitor();
+//            HtmlDocument ast = (HtmlDocument) visitor.visit(jtree);
+//
+//            System.out.println("------ Abstract Syntax Tree (AST) From File ------");
+//            System.out.println(ast.toString());
+//            System.out.println("--------------------------------------------------");
+//
+//        } catch (Exception e) {
+//            System.err.println("خطأ أثناء قراءة الملف أو التحليل: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//        System.out.println("================================================");
+//        System.out.println("------ Symbol Table (Variables & Values) ------");
+//        System.out.println("================================================");
+//        if (visitor != null) {
+//            visitor.getSymbolTable().print();
+//        } else {
+//            System.out.println("Visitor was not initialized.");
+//        }
+//        System.out.println("--------------------------------------------------");
+//
 
-        WebVisitor visitor = null;
-        try {
-
-            String filePath = "web.txt";
-            String input = new String(Files.readAllBytes(Paths.get(filePath)));
-
-            // تنفيذ عملية الـ Parsing كالمعتاد
-            WebLexer lexer = new WebLexer(CharStreams.fromString(input));
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            WebParser parser = new WebParser(tokens);
-            ParseTree jtree = parser.htmlDocument();
-
-            visitor = new WebVisitor();
-            HtmlDocument ast = (HtmlDocument) visitor.visit(jtree);
-
-            System.out.println("------ Abstract Syntax Tree (AST) From File ------");
-            System.out.println(ast.toString());
-            System.out.println("--------------------------------------------------");
-
-        } catch (Exception e) {
-            System.err.println("خطأ أثناء قراءة الملف أو التحليل: " + e.getMessage());
-            e.printStackTrace();
-        }
-        System.out.println("================================================");
-        System.out.println("------ Symbol Table (Variables & Values) ------");
-        System.out.println("================================================");
-        if (visitor != null) {
-            visitor.getSymbolTable().print();
-        } else {
-            System.out.println("Visitor was not initialized.");
-        }
-        System.out.println("--------------------------------------------------");
 
     }
 }

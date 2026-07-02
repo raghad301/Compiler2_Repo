@@ -10,6 +10,10 @@ public abstract class ASTNode {
         this.lineNumber = line;
     }
 
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
     public void print(String indent) {
         String className = this.getClass().getSimpleName();
 

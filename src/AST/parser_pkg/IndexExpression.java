@@ -17,6 +17,14 @@ public class IndexExpression extends Expression {
         this.index = index;
     }
 
+    public Expression getObject() {
+        return object;
+    }
+
+    public Expression getIndex() {
+        return index;
+    }
+
     @Override
     public String toString() {
         return object + "[" + index + "]";
