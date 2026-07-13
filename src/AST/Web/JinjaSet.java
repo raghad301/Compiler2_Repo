@@ -14,4 +14,6 @@ public class JinjaSet extends JinjaStatement {
 
         return "JinjaSet (Variable: " + name + ") (Line: " + getLine() + ")";
     }
+
+
 }

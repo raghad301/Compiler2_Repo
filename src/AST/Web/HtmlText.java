@@ -9,6 +9,7 @@ public class HtmlText extends HtmlNode {
 
     }
 
+
     @Override
     public String toString() {
         return "HtmlTextNode (\"" + text.trim() + "\") (Line: " + line + ")";

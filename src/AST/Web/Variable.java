@@ -13,4 +13,7 @@ public class Variable extends AST.Web.Expression {
     public String toString() {
         return "VariableNode [" + String.join(".", names) + "] (Line: " + line + ")";
     }
+
+
+
 }

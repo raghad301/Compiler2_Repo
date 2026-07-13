@@ -20,6 +20,9 @@ public class HtmlElement extends HtmlNode {
         children.add(child);
     }
 
+
+    public String getTagName() { return tagName; }
+    public java.util.ArrayList<HtmlNode> getChildren() { return children; }
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
