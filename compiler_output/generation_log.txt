@@ -1,0 +1,27 @@
+=== Generation Log ===
+=== Starting Python Code Generation ===
+Working directory: D:\Downloads\Telegram Desktop\Compiler2_Repo (2)\Compiler2_Repo
+Extracted global variable: products = [{id=1.0, name=Phone, price=300.0, image=phone.png}, {id=2.0, name=Laptop, price=800.0, image=laptop.png}, {id=3.0, name=Headset, price=50.0, image=headset.png}, {id=4.0, name=Smart Watch, price=150.0, image=smart_watch.png}, {id=5.0, name=iPad, price=450.0, image=ipad.png}, {id=6.0, name=Camera, price=650.0, image=camera.png}, {id=7.0, name=Keyboard, price=80.0, image=keyboard.png}]
+Extracted 1 context variable(s) from Python AST.
+Template context for index.jinja: {products=[{id=1.0, name=Phone, price=300.0, image=phone.png}, {id=2.0, name=Laptop, price=800.0, image=laptop.png}, {id=3.0, name=Headset, price=50.0, image=headset.png}, {id=4.0, name=Smart Watch, price=150.0, image=smart_watch.png}, {id=5.0, name=iPad, price=450.0, image=ipad.png}, {id=6.0, name=Camera, price=650.0, image=camera.png}, {id=7.0, name=Keyboard, price=80.0, image=keyboard.png}], title=Product Store}
+Template context for add_product.jinja: {title=Add Product}
+Template context for edit_product.jinja: {product=null, title=Edit Product}
+Template context for product_details.jinja: {product=null, title=Product Details}
+Extracted template contexts: {index.jinja={products=[{id=1.0, name=Phone, price=300.0, image=phone.png}, {id=2.0, name=Laptop, price=800.0, image=laptop.png}, {id=3.0, name=Headset, price=50.0, image=headset.png}, {id=4.0, name=Smart Watch, price=150.0, image=smart_watch.png}, {id=5.0, name=iPad, price=450.0, image=ipad.png}, {id=6.0, name=Camera, price=650.0, image=camera.png}, {id=7.0, name=Keyboard, price=80.0, image=keyboard.png}], title=Product Store}, add_product.jinja={title=Add Product}, edit_product.jinja={product=null, title=Edit Product}, product_details.jinja={product=null, title=Product Details}}
+Found template: index.jinja
+Found template: add_product.jinja
+Found template: edit_product.jinja
+Found template: product_details.jinja
+Found 4 template(s): [index.jinja, add_product.jinja, edit_product.jinja, product_details.jinja]
+✓ Copied: input\style.css → output\style.css
+✓ Copied: input\script.js → output\script.js
+✓ Copied: input\app.py → output\app.py
+✓ Copied directory: input\pics → output\pics
+=== Code Generation Completed Successfully ===
+✓ Written compiler_output/ast_python.json
+✓ Generated output/add_product.html from add_product.jinja
+✓ Generated output/edit_product.html from edit_product.jinja
+✓ Generated output/index.html from index.jinja
+✓ Generated output/product_details.html from product_details.jinja
+✓ Written compiler_output/ast_jinja.json and 4 per-template AST report(s).
+Compilation Status: SUCCESS

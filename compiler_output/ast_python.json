@@ -1,0 +1,3540 @@
+{
+  "type": "Program",
+  "line": 1,
+  "children": [
+    {
+      "type": "ImportStatement",
+      "line": 1,
+      "detail": "From: flask",
+      "children": [      ]
+    },
+    {
+      "type": "ImportStatement",
+      "line": 2,
+      "detail": "From: werkzeug.utils",
+      "children": [      ]
+    },
+    {
+      "type": "Assignment",
+      "line": 4,
+      "detail": "app",
+      "children": [
+        {
+          "type": "Target",
+          "line": 4,
+          "detail": "app",
+          "children": [          ]
+        },
+        {
+          "type": "FunctionCall",
+          "line": 4,
+          "children": [
+            {
+              "type": "Identifier",
+              "line": 4,
+              "detail": "Flask",
+              "children": [              ]
+            },
+            {
+              "type": "Argument",
+              "line": 4,
+              "detail": "Positional",
+              "children": [
+                {
+                  "type": "Identifier",
+                  "line": 4,
+                  "detail": "__name__",
+                  "children": [                  ]
+                }
+              ]
+            },
+            {
+              "type": "Argument",
+              "line": 4,
+              "detail": "Keyword: static_folder",
+              "children": [
+                {
+                  "type": "StringLiteral",
+                  "line": 4,
+                  "detail": "\".\"",
+                  "children": [                  ]
+                }
+              ]
+            },
+            {
+              "type": "Argument",
+              "line": 4,
+              "detail": "Keyword: static_url_path",
+              "children": [
+                {
+                  "type": "StringLiteral",
+                  "line": 4,
+                  "detail": "\"/static\"",
+                  "children": [                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FunctionDef",
+      "line": 6,
+      "detail": "save_product_image",
+      "children": [
+        {
+          "type": "ParameterList",
+          "line": 6,
+          "children": [
+            {
+              "type": "Parameter",
+              "line": 6,
+              "detail": "image_file",
+              "children": [              ]
+            },
+            {
+              "type": "Parameter",
+              "line": 6,
+              "detail": "product_id",
+              "children": [              ]
+            }
+          ]
+        },
+        {
+          "type": "Block",
+          "line": 6,
+          "children": [
+            {
+              "type": "IfStatement",
+              "line": 7,
+              "children": [
+                {
+                  "type": "GenericBinaryExpression",
+                  "line": 7,
+                  "detail": "or",
+                  "children": [
+                    {
+                      "type": "GenericBinaryExpression",
+                      "line": 7,
+                      "detail": "is",
+                      "children": [
+                        {
+                          "type": "Identifier",
+                          "line": 7,
+                          "detail": "image_file",
+                          "children": [                          ]
+                        },
+                        {
+                          "type": "NoneLiteral",
+                          "line": 7,
+                          "detail": "None",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "GenericBinaryExpression",
+                      "line": 7,
+                      "detail": "==",
+                      "children": [
+                        {
+                          "type": "MemberAccess",
+                          "line": 7,
+                          "detail": ".filename",
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 7,
+                              "detail": "image_file",
+                              "children": [                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "StringLiteral",
+                          "line": 7,
+                          "detail": "\"\"",
+                          "children": [                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Block",
+                  "line": 7,
+                  "children": [
+                    {
+                      "type": "ReturnStatement",
+                      "line": 8,
+                      "children": [
+                        {
+                          "type": "NoneLiteral",
+                          "line": 8,
+                          "detail": "None",
+                          "children": [                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Assignment",
+              "line": 10,
+              "detail": "original_name",
+              "children": [
+                {
+                  "type": "Target",
+                  "line": 10,
+                  "detail": "original_name",
+                  "children": [                  ]
+                },
+                {
+                  "type": "FunctionCall",
+                  "line": 10,
+                  "children": [
+                    {
+                      "type": "Identifier",
+                      "line": 10,
+                      "detail": "secure_filename",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 10,
+                      "detail": "Positional",
+                      "children": [
+                        {
+                          "type": "MemberAccess",
+                          "line": 10,
+                          "detail": ".filename",
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 10,
+                              "detail": "image_file",
+                              "children": [                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Assignment",
+              "line": 11,
+              "detail": "lower_name",
+              "children": [
+                {
+                  "type": "Target",
+                  "line": 11,
+                  "detail": "lower_name",
+                  "children": [                  ]
+                },
+                {
+                  "type": "FunctionCall",
+                  "line": 11,
+                  "children": [
+                    {
+                      "type": "MemberAccess",
+                      "line": 11,
+                      "detail": ".lower",
+                      "children": [
+                        {
+                          "type": "Identifier",
+                          "line": 11,
+                          "detail": "original_name",
+                          "children": [                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Assignment",
+              "line": 13,
+              "detail": "allowed",
+              "children": [
+                {
+                  "type": "Target",
+                  "line": 13,
+                  "detail": "allowed",
+                  "children": [                  ]
+                },
+                {
+                  "type": "GenericBinaryExpression",
+                  "line": 13,
+                  "detail": "or",
+                  "children": [
+                    {
+                      "type": "GenericBinaryExpression",
+                      "line": 13,
+                      "detail": "or",
+                      "children": [
+                        {
+                          "type": "GenericBinaryExpression",
+                          "line": 13,
+                          "detail": "or",
+                          "children": [
+                            {
+                              "type": "FunctionCall",
+                              "line": 13,
+                              "children": [
+                                {
+                                  "type": "MemberAccess",
+                                  "line": 13,
+                                  "detail": ".endswith",
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 13,
+                                      "detail": "lower_name",
+                                      "children": [                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Argument",
+                                  "line": 13,
+                                  "detail": "Positional",
+                                  "children": [
+                                    {
+                                      "type": "StringLiteral",
+                                      "line": 13,
+                                      "detail": "\".png\"",
+                                      "children": [                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "FunctionCall",
+                              "line": 13,
+                              "children": [
+                                {
+                                  "type": "MemberAccess",
+                                  "line": 13,
+                                  "detail": ".endswith",
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 13,
+                                      "detail": "lower_name",
+                                      "children": [                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Argument",
+                                  "line": 13,
+                                  "detail": "Positional",
+                                  "children": [
+                                    {
+                                      "type": "StringLiteral",
+                                      "line": 13,
+                                      "detail": "\".jpg\"",
+                                      "children": [                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "FunctionCall",
+                          "line": 13,
+                          "children": [
+                            {
+                              "type": "MemberAccess",
+                              "line": 13,
+                              "detail": ".endswith",
+                              "children": [
+                                {
+                                  "type": "Identifier",
+                                  "line": 13,
+                                  "detail": "lower_name",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 13,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "StringLiteral",
+                                  "line": 13,
+                                  "detail": "\".jpeg\"",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FunctionCall",
+                      "line": 13,
+                      "children": [
+                        {
+                          "type": "MemberAccess",
+                          "line": 13,
+                          "detail": ".endswith",
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 13,
+                              "detail": "lower_name",
+                              "children": [                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Argument",
+                          "line": 13,
+                          "detail": "Positional",
+                          "children": [
+                            {
+                              "type": "StringLiteral",
+                              "line": 13,
+                              "detail": "\".webp\"",
+                              "children": [                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "IfStatement",
+              "line": 15,
+              "children": [
+                {
+                  "type": "Identifier",
+                  "line": 15,
+                  "detail": "allowed",
+                  "children": [                  ]
+                },
+                {
+                  "type": "Block",
+                  "line": 15,
+                  "children": [
+                    {
+                      "type": "ReturnStatement",
+                      "line": 16,
+                      "children": [
+                        {
+                          "type": "NoneLiteral",
+                          "line": 16,
+                          "detail": "None",
+                          "children": [                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Assignment",
+              "line": 18,
+              "detail": "image_name",
+              "children": [
+                {
+                  "type": "Target",
+                  "line": 18,
+                  "detail": "image_name",
+                  "children": [                  ]
+                },
+                {
+                  "type": "GenericBinaryExpression",
+                  "line": 18,
+                  "detail": "+",
+                  "children": [
+                    {
+                      "type": "GenericBinaryExpression",
+                      "line": 18,
+                      "detail": "+",
+                      "children": [
+                        {
+                          "type": "FunctionCall",
+                          "line": 18,
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 18,
+                              "detail": "str",
+                              "children": [                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 18,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "Identifier",
+                                  "line": 18,
+                                  "detail": "product_id",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "StringLiteral",
+                          "line": 18,
+                          "detail": "\"_\"",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Identifier",
+                      "line": 18,
+                      "detail": "original_name",
+                      "children": [                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Assignment",
+              "line": 19,
+              "detail": "image_path",
+              "children": [
+                {
+                  "type": "Target",
+                  "line": 19,
+                  "detail": "image_path",
+                  "children": [                  ]
+                },
+                {
+                  "type": "GenericBinaryExpression",
+                  "line": 19,
+                  "detail": "+",
+                  "children": [
+                    {
+                      "type": "GenericBinaryExpression",
+                      "line": 19,
+                      "detail": "+",
+                      "children": [
+                        {
+                          "type": "MemberAccess",
+                          "line": 19,
+                          "detail": ".static_folder",
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 19,
+                              "detail": "app",
+                              "children": [                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "StringLiteral",
+                          "line": 19,
+                          "detail": "\"/pics/\"",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Identifier",
+                      "line": 19,
+                      "detail": "image_name",
+                      "children": [                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ExpressionStatement",
+              "line": 20,
+              "children": [
+                {
+                  "type": "FunctionCall",
+                  "line": 20,
+                  "children": [
+                    {
+                      "type": "MemberAccess",
+                      "line": 20,
+                      "detail": ".save",
+                      "children": [
+                        {
+                          "type": "Identifier",
+                          "line": 20,
+                          "detail": "image_file",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 20,
+                      "detail": "Positional",
+                      "children": [
+                        {
+                          "type": "Identifier",
+                          "line": 20,
+                          "detail": "image_path",
+                          "children": [                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ReturnStatement",
+              "line": 22,
+              "children": [
+                {
+                  "type": "Identifier",
+                  "line": 22,
+                  "detail": "image_name",
+                  "children": [                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Assignment",
+      "line": 24,
+      "detail": "products",
+      "children": [
+        {
+          "type": "Target",
+          "line": 24,
+          "detail": "products",
+          "children": [          ]
+        },
+        {
+          "type": "ListExpression",
+          "line": 25,
+          "detail": "Size: 7",
+          "children": [
+            {
+              "type": "DictExpression",
+              "line": 25,
+              "children": [
+                {
+                  "type": "DictEntry",
+                  "line": 25,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 25,
+                      "detail": "\"id\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "NumberLiteral",
+                      "line": 25,
+                      "detail": "1.0",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 25,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 25,
+                      "detail": "\"name\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 25,
+                      "detail": "\"Phone\"",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 25,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 25,
+                      "detail": "\"price\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "NumberLiteral",
+                      "line": 25,
+                      "detail": "300.0",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 25,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 25,
+                      "detail": "\"image\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 25,
+                      "detail": "\"phone.png\"",
+                      "children": [                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DictExpression",
+              "line": 26,
+              "children": [
+                {
+                  "type": "DictEntry",
+                  "line": 26,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 26,
+                      "detail": "\"id\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "NumberLiteral",
+                      "line": 26,
+                      "detail": "2.0",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 26,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 26,
+                      "detail": "\"name\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 26,
+                      "detail": "\"Laptop\"",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 26,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 26,
+                      "detail": "\"price\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "NumberLiteral",
+                      "line": 26,
+                      "detail": "800.0",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 26,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 26,
+                      "detail": "\"image\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 26,
+                      "detail": "\"laptop.png\"",
+                      "children": [                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DictExpression",
+              "line": 27,
+              "children": [
+                {
+                  "type": "DictEntry",
+                  "line": 27,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 27,
+                      "detail": "\"id\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "NumberLiteral",
+                      "line": 27,
+                      "detail": "3.0",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 27,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 27,
+                      "detail": "\"name\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 27,
+                      "detail": "\"Headset\"",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 27,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 27,
+                      "detail": "\"price\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "NumberLiteral",
+                      "line": 27,
+                      "detail": "50.0",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 27,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 27,
+                      "detail": "\"image\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 27,
+                      "detail": "\"headset.png\"",
+                      "children": [                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DictExpression",
+              "line": 28,
+              "children": [
+                {
+                  "type": "DictEntry",
+                  "line": 28,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 28,
+                      "detail": "\"id\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "NumberLiteral",
+                      "line": 28,
+                      "detail": "4.0",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 28,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 28,
+                      "detail": "\"name\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 28,
+                      "detail": "\"Smart Watch\"",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 28,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 28,
+                      "detail": "\"price\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "NumberLiteral",
+                      "line": 28,
+                      "detail": "150.0",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 28,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 28,
+                      "detail": "\"image\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 28,
+                      "detail": "\"smart_watch.png\"",
+                      "children": [                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DictExpression",
+              "line": 29,
+              "children": [
+                {
+                  "type": "DictEntry",
+                  "line": 29,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 29,
+                      "detail": "\"id\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "NumberLiteral",
+                      "line": 29,
+                      "detail": "5.0",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 29,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 29,
+                      "detail": "\"name\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 29,
+                      "detail": "\"iPad\"",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 29,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 29,
+                      "detail": "\"price\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "NumberLiteral",
+                      "line": 29,
+                      "detail": "450.0",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 29,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 29,
+                      "detail": "\"image\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 29,
+                      "detail": "\"ipad.png\"",
+                      "children": [                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DictExpression",
+              "line": 30,
+              "children": [
+                {
+                  "type": "DictEntry",
+                  "line": 30,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 30,
+                      "detail": "\"id\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "NumberLiteral",
+                      "line": 30,
+                      "detail": "6.0",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 30,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 30,
+                      "detail": "\"name\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 30,
+                      "detail": "\"Camera\"",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 30,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 30,
+                      "detail": "\"price\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "NumberLiteral",
+                      "line": 30,
+                      "detail": "650.0",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 30,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 30,
+                      "detail": "\"image\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 30,
+                      "detail": "\"camera.png\"",
+                      "children": [                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DictExpression",
+              "line": 31,
+              "children": [
+                {
+                  "type": "DictEntry",
+                  "line": 31,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 31,
+                      "detail": "\"id\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "NumberLiteral",
+                      "line": 31,
+                      "detail": "7.0",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 31,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 31,
+                      "detail": "\"name\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 31,
+                      "detail": "\"Keyboard\"",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 31,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 31,
+                      "detail": "\"price\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "NumberLiteral",
+                      "line": 31,
+                      "detail": "80.0",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DictEntry",
+                  "line": 31,
+                  "children": [
+                    {
+                      "type": "StringLiteral",
+                      "line": 31,
+                      "detail": "\"image\"",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 31,
+                      "detail": "\"keyboard.png\"",
+                      "children": [                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FunctionDef",
+      "line": 34,
+      "detail": "index",
+      "children": [
+        {
+          "type": "Decorator",
+          "line": 34,
+          "detail": "@app.route",
+          "children": [
+            {
+              "type": "StringLiteral",
+              "line": 34,
+              "detail": "\"/\"",
+              "children": [              ]
+            }
+          ]
+        },
+        {
+          "type": "Block",
+          "line": 35,
+          "children": [
+            {
+              "type": "ReturnStatement",
+              "line": 36,
+              "children": [
+                {
+                  "type": "FunctionCall",
+                  "line": 36,
+                  "children": [
+                    {
+                      "type": "Identifier",
+                      "line": 36,
+                      "detail": "render_template",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 36,
+                      "detail": "Positional",
+                      "children": [
+                        {
+                          "type": "StringLiteral",
+                          "line": 36,
+                          "detail": "\"index.jinja\"",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 36,
+                      "detail": "Keyword: products",
+                      "children": [
+                        {
+                          "type": "Identifier",
+                          "line": 36,
+                          "detail": "products",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 36,
+                      "detail": "Keyword: title",
+                      "children": [
+                        {
+                          "type": "StringLiteral",
+                          "line": 36,
+                          "detail": "\"Product Store\"",
+                          "children": [                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FunctionDef",
+      "line": 38,
+      "detail": "add_product",
+      "children": [
+        {
+          "type": "Decorator",
+          "line": 38,
+          "detail": "@app.route",
+          "children": [
+            {
+              "type": "StringLiteral",
+              "line": 38,
+              "detail": "\"/add\"",
+              "children": [              ]
+            },
+            {
+              "type": "ListExpression",
+              "line": 38,
+              "detail": "Size: 2",
+              "children": [
+                {
+                  "type": "StringLiteral",
+                  "line": 38,
+                  "detail": "\"GET\"",
+                  "children": [                  ]
+                },
+                {
+                  "type": "StringLiteral",
+                  "line": 38,
+                  "detail": "\"POST\"",
+                  "children": [                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Block",
+          "line": 39,
+          "children": [
+            {
+              "type": "IfStatement",
+              "line": 40,
+              "children": [
+                {
+                  "type": "GenericBinaryExpression",
+                  "line": 40,
+                  "detail": "==",
+                  "children": [
+                    {
+                      "type": "MemberAccess",
+                      "line": 40,
+                      "detail": ".method",
+                      "children": [
+                        {
+                          "type": "Identifier",
+                          "line": 40,
+                          "detail": "request",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 40,
+                      "detail": "\"POST\"",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Block",
+                  "line": 40,
+                  "children": [
+                    {
+                      "type": "Assignment",
+                      "line": 41,
+                      "detail": "name",
+                      "children": [
+                        {
+                          "type": "Target",
+                          "line": 41,
+                          "detail": "name",
+                          "children": [                          ]
+                        },
+                        {
+                          "type": "FunctionCall",
+                          "line": 41,
+                          "children": [
+                            {
+                              "type": "MemberAccess",
+                              "line": 41,
+                              "detail": ".get",
+                              "children": [
+                                {
+                                  "type": "MemberAccess",
+                                  "line": 41,
+                                  "detail": ".form",
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 41,
+                                      "detail": "request",
+                                      "children": [                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 41,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "StringLiteral",
+                                  "line": 41,
+                                  "detail": "\"name\"",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Assignment",
+                      "line": 42,
+                      "detail": "price",
+                      "children": [
+                        {
+                          "type": "Target",
+                          "line": 42,
+                          "detail": "price",
+                          "children": [                          ]
+                        },
+                        {
+                          "type": "FunctionCall",
+                          "line": 42,
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 42,
+                              "detail": "float",
+                              "children": [                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 42,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "FunctionCall",
+                                  "line": 42,
+                                  "children": [
+                                    {
+                                      "type": "MemberAccess",
+                                      "line": 42,
+                                      "detail": ".get",
+                                      "children": [
+                                        {
+                                          "type": "MemberAccess",
+                                          "line": 42,
+                                          "detail": ".form",
+                                          "children": [
+                                            {
+                                              "type": "Identifier",
+                                              "line": 42,
+                                              "detail": "request",
+                                              "children": [                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "Argument",
+                                      "line": 42,
+                                      "detail": "Positional",
+                                      "children": [
+                                        {
+                                          "type": "StringLiteral",
+                                          "line": 42,
+                                          "detail": "\"price\"",
+                                          "children": [                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Assignment",
+                      "line": 43,
+                      "detail": "new_id",
+                      "children": [
+                        {
+                          "type": "Target",
+                          "line": 43,
+                          "detail": "new_id",
+                          "children": [                          ]
+                        },
+                        {
+                          "type": "NumberLiteral",
+                          "line": 43,
+                          "detail": "1.0",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ForStatement",
+                      "line": 44,
+                      "detail": "Iter: product",
+                      "children": [
+                        {
+                          "type": "Identifier",
+                          "line": 44,
+                          "detail": "products",
+                          "children": [                          ]
+                        },
+                        {
+                          "type": "Block",
+                          "line": 44,
+                          "children": [
+                            {
+                              "type": "IfStatement",
+                              "line": 45,
+                              "children": [
+                                {
+                                  "type": "GenericBinaryExpression",
+                                  "line": 45,
+                                  "detail": ">=",
+                                  "children": [
+                                    {
+                                      "type": "IndexExpression",
+                                      "line": 45,
+                                      "children": [
+                                        {
+                                          "type": "Identifier",
+                                          "line": 45,
+                                          "detail": "product",
+                                          "children": [                                          ]
+                                        },
+                                        {
+                                          "type": "StringLiteral",
+                                          "line": 45,
+                                          "detail": "\"id\"",
+                                          "children": [                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "Identifier",
+                                      "line": 45,
+                                      "detail": "new_id",
+                                      "children": [                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Block",
+                                  "line": 45,
+                                  "children": [
+                                    {
+                                      "type": "Assignment",
+                                      "line": 46,
+                                      "detail": "new_id",
+                                      "children": [
+                                        {
+                                          "type": "Target",
+                                          "line": 46,
+                                          "detail": "new_id",
+                                          "children": [                                          ]
+                                        },
+                                        {
+                                          "type": "GenericBinaryExpression",
+                                          "line": 46,
+                                          "detail": "+",
+                                          "children": [
+                                            {
+                                              "type": "IndexExpression",
+                                              "line": 46,
+                                              "children": [
+                                                {
+                                                  "type": "Identifier",
+                                                  "line": 46,
+                                                  "detail": "product",
+                                                  "children": [                                                  ]
+                                                },
+                                                {
+                                                  "type": "StringLiteral",
+                                                  "line": 46,
+                                                  "detail": "\"id\"",
+                                                  "children": [                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "type": "NumberLiteral",
+                                              "line": 46,
+                                              "detail": "1.0",
+                                              "children": [                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Assignment",
+                      "line": 48,
+                      "detail": "image_file",
+                      "children": [
+                        {
+                          "type": "Target",
+                          "line": 48,
+                          "detail": "image_file",
+                          "children": [                          ]
+                        },
+                        {
+                          "type": "FunctionCall",
+                          "line": 48,
+                          "children": [
+                            {
+                              "type": "MemberAccess",
+                              "line": 48,
+                              "detail": ".get",
+                              "children": [
+                                {
+                                  "type": "MemberAccess",
+                                  "line": 48,
+                                  "detail": ".files",
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 48,
+                                      "detail": "request",
+                                      "children": [                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 48,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "StringLiteral",
+                                  "line": 48,
+                                  "detail": "\"image\"",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Assignment",
+                      "line": 49,
+                      "detail": "image_name",
+                      "children": [
+                        {
+                          "type": "Target",
+                          "line": 49,
+                          "detail": "image_name",
+                          "children": [                          ]
+                        },
+                        {
+                          "type": "FunctionCall",
+                          "line": 49,
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 49,
+                              "detail": "save_product_image",
+                              "children": [                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 49,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "Identifier",
+                                  "line": 49,
+                                  "detail": "image_file",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 49,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "Identifier",
+                                  "line": 49,
+                                  "detail": "new_id",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "IfStatement",
+                      "line": 51,
+                      "children": [
+                        {
+                          "type": "GenericBinaryExpression",
+                          "line": 51,
+                          "detail": "is",
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 51,
+                              "detail": "image_name",
+                              "children": [                              ]
+                            },
+                            {
+                              "type": "NoneLiteral",
+                              "line": 51,
+                              "detail": "None",
+                              "children": [                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Block",
+                          "line": 51,
+                          "children": [
+                            {
+                              "type": "ReturnStatement",
+                              "line": 52,
+                              "children": [
+                                {
+                                  "type": "FunctionCall",
+                                  "line": 52,
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 52,
+                                      "detail": "redirect",
+                                      "children": [                                      ]
+                                    },
+                                    {
+                                      "type": "Argument",
+                                      "line": 52,
+                                      "detail": "Positional",
+                                      "children": [
+                                        {
+                                          "type": "FunctionCall",
+                                          "line": 52,
+                                          "children": [
+                                            {
+                                              "type": "Identifier",
+                                              "line": 52,
+                                              "detail": "url_for",
+                                              "children": [                                              ]
+                                            },
+                                            {
+                                              "type": "Argument",
+                                              "line": 52,
+                                              "detail": "Positional",
+                                              "children": [
+                                                {
+                                                  "type": "StringLiteral",
+                                                  "line": 52,
+                                                  "detail": "\"add_product\"",
+                                                  "children": [                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Assignment",
+                      "line": 54,
+                      "detail": "new_product",
+                      "children": [
+                        {
+                          "type": "Target",
+                          "line": 54,
+                          "detail": "new_product",
+                          "children": [                          ]
+                        },
+                        {
+                          "type": "DictExpression",
+                          "line": 54,
+                          "children": [
+                            {
+                              "type": "DictEntry",
+                              "line": 55,
+                              "children": [
+                                {
+                                  "type": "StringLiteral",
+                                  "line": 55,
+                                  "detail": "\"id\"",
+                                  "children": [                                  ]
+                                },
+                                {
+                                  "type": "Identifier",
+                                  "line": 55,
+                                  "detail": "new_id",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "DictEntry",
+                              "line": 56,
+                              "children": [
+                                {
+                                  "type": "StringLiteral",
+                                  "line": 56,
+                                  "detail": "\"name\"",
+                                  "children": [                                  ]
+                                },
+                                {
+                                  "type": "Identifier",
+                                  "line": 56,
+                                  "detail": "name",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "DictEntry",
+                              "line": 57,
+                              "children": [
+                                {
+                                  "type": "StringLiteral",
+                                  "line": 57,
+                                  "detail": "\"price\"",
+                                  "children": [                                  ]
+                                },
+                                {
+                                  "type": "Identifier",
+                                  "line": 57,
+                                  "detail": "price",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "DictEntry",
+                              "line": 58,
+                              "children": [
+                                {
+                                  "type": "StringLiteral",
+                                  "line": 58,
+                                  "detail": "\"image\"",
+                                  "children": [                                  ]
+                                },
+                                {
+                                  "type": "Identifier",
+                                  "line": 58,
+                                  "detail": "image_name",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ExpressionStatement",
+                      "line": 61,
+                      "children": [
+                        {
+                          "type": "FunctionCall",
+                          "line": 61,
+                          "children": [
+                            {
+                              "type": "MemberAccess",
+                              "line": 61,
+                              "detail": ".append",
+                              "children": [
+                                {
+                                  "type": "Identifier",
+                                  "line": 61,
+                                  "detail": "products",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 61,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "Identifier",
+                                  "line": 61,
+                                  "detail": "new_product",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ReturnStatement",
+                      "line": 62,
+                      "children": [
+                        {
+                          "type": "FunctionCall",
+                          "line": 62,
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 62,
+                              "detail": "redirect",
+                              "children": [                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 62,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "FunctionCall",
+                                  "line": 62,
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 62,
+                                      "detail": "url_for",
+                                      "children": [                                      ]
+                                    },
+                                    {
+                                      "type": "Argument",
+                                      "line": 62,
+                                      "detail": "Positional",
+                                      "children": [
+                                        {
+                                          "type": "StringLiteral",
+                                          "line": 62,
+                                          "detail": "\"index\"",
+                                          "children": [                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ReturnStatement",
+              "line": 63,
+              "children": [
+                {
+                  "type": "FunctionCall",
+                  "line": 63,
+                  "children": [
+                    {
+                      "type": "Identifier",
+                      "line": 63,
+                      "detail": "render_template",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 63,
+                      "detail": "Positional",
+                      "children": [
+                        {
+                          "type": "StringLiteral",
+                          "line": 63,
+                          "detail": "\"add_product.jinja\"",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 63,
+                      "detail": "Keyword: title",
+                      "children": [
+                        {
+                          "type": "StringLiteral",
+                          "line": 63,
+                          "detail": "\"Add Product\"",
+                          "children": [                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FunctionDef",
+      "line": 65,
+      "detail": "edit_product",
+      "children": [
+        {
+          "type": "Decorator",
+          "line": 65,
+          "detail": "@app.route",
+          "children": [
+            {
+              "type": "StringLiteral",
+              "line": 65,
+              "detail": "\"/edit/<int:product_id>\"",
+              "children": [              ]
+            },
+            {
+              "type": "ListExpression",
+              "line": 65,
+              "detail": "Size: 2",
+              "children": [
+                {
+                  "type": "StringLiteral",
+                  "line": 65,
+                  "detail": "\"GET\"",
+                  "children": [                  ]
+                },
+                {
+                  "type": "StringLiteral",
+                  "line": 65,
+                  "detail": "\"POST\"",
+                  "children": [                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "ParameterList",
+          "line": 66,
+          "children": [
+            {
+              "type": "Parameter",
+              "line": 66,
+              "detail": "product_id",
+              "children": [              ]
+            }
+          ]
+        },
+        {
+          "type": "Block",
+          "line": 66,
+          "children": [
+            {
+              "type": "Assignment",
+              "line": 67,
+              "detail": "product",
+              "children": [
+                {
+                  "type": "Target",
+                  "line": 67,
+                  "detail": "product",
+                  "children": [                  ]
+                },
+                {
+                  "type": "FunctionCall",
+                  "line": 67,
+                  "children": [
+                    {
+                      "type": "Identifier",
+                      "line": 67,
+                      "detail": "next",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 67,
+                      "detail": "Positional",
+                      "children": [
+                        {
+                          "type": "ListExpression",
+                          "line": 67,
+                          "detail": "Comprehension (for p)",
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 67,
+                              "detail": "p",
+                              "children": [                              ]
+                            },
+                            {
+                              "type": "Identifier",
+                              "line": 67,
+                              "detail": "products",
+                              "children": [                              ]
+                            },
+                            {
+                              "type": "GenericBinaryExpression",
+                              "line": 67,
+                              "detail": "==",
+                              "children": [
+                                {
+                                  "type": "IndexExpression",
+                                  "line": 67,
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 67,
+                                      "detail": "p",
+                                      "children": [                                      ]
+                                    },
+                                    {
+                                      "type": "StringLiteral",
+                                      "line": 67,
+                                      "detail": "\"id\"",
+                                      "children": [                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Identifier",
+                                  "line": 67,
+                                  "detail": "product_id",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 67,
+                      "detail": "Positional",
+                      "children": [
+                        {
+                          "type": "NoneLiteral",
+                          "line": 67,
+                          "detail": "None",
+                          "children": [                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "IfStatement",
+              "line": 68,
+              "children": [
+                {
+                  "type": "Identifier",
+                  "line": 68,
+                  "detail": "product",
+                  "children": [                  ]
+                },
+                {
+                  "type": "Block",
+                  "line": 68,
+                  "children": [
+                    {
+                      "type": "ReturnStatement",
+                      "line": 69,
+                      "children": [
+                        {
+                          "type": "FunctionCall",
+                          "line": 69,
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 69,
+                              "detail": "redirect",
+                              "children": [                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 69,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "FunctionCall",
+                                  "line": 69,
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 69,
+                                      "detail": "url_for",
+                                      "children": [                                      ]
+                                    },
+                                    {
+                                      "type": "Argument",
+                                      "line": 69,
+                                      "detail": "Positional",
+                                      "children": [
+                                        {
+                                          "type": "StringLiteral",
+                                          "line": 69,
+                                          "detail": "\"index\"",
+                                          "children": [                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "IfStatement",
+              "line": 71,
+              "children": [
+                {
+                  "type": "GenericBinaryExpression",
+                  "line": 71,
+                  "detail": "==",
+                  "children": [
+                    {
+                      "type": "MemberAccess",
+                      "line": 71,
+                      "detail": ".method",
+                      "children": [
+                        {
+                          "type": "Identifier",
+                          "line": 71,
+                          "detail": "request",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "StringLiteral",
+                      "line": 71,
+                      "detail": "\"POST\"",
+                      "children": [                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Block",
+                  "line": 71,
+                  "children": [
+                    {
+                      "type": "Assignment",
+                      "line": 72,
+                      "detail": "product",
+                      "children": [
+                        {
+                          "type": "Target",
+                          "line": 72,
+                          "detail": "product",
+                          "children": [
+                            {
+                              "type": "IndexAccess",
+                              "line": 72,
+                              "children": [
+                                {
+                                  "type": "StringLiteral",
+                                  "line": 72,
+                                  "detail": "\"name\"",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "FunctionCall",
+                          "line": 72,
+                          "children": [
+                            {
+                              "type": "MemberAccess",
+                              "line": 72,
+                              "detail": ".get",
+                              "children": [
+                                {
+                                  "type": "MemberAccess",
+                                  "line": 72,
+                                  "detail": ".form",
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 72,
+                                      "detail": "request",
+                                      "children": [                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 72,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "StringLiteral",
+                                  "line": 72,
+                                  "detail": "\"name\"",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Assignment",
+                      "line": 73,
+                      "detail": "product",
+                      "children": [
+                        {
+                          "type": "Target",
+                          "line": 73,
+                          "detail": "product",
+                          "children": [
+                            {
+                              "type": "IndexAccess",
+                              "line": 73,
+                              "children": [
+                                {
+                                  "type": "StringLiteral",
+                                  "line": 73,
+                                  "detail": "\"price\"",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "FunctionCall",
+                          "line": 73,
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 73,
+                              "detail": "float",
+                              "children": [                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 73,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "FunctionCall",
+                                  "line": 73,
+                                  "children": [
+                                    {
+                                      "type": "MemberAccess",
+                                      "line": 73,
+                                      "detail": ".get",
+                                      "children": [
+                                        {
+                                          "type": "MemberAccess",
+                                          "line": 73,
+                                          "detail": ".form",
+                                          "children": [
+                                            {
+                                              "type": "Identifier",
+                                              "line": 73,
+                                              "detail": "request",
+                                              "children": [                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "Argument",
+                                      "line": 73,
+                                      "detail": "Positional",
+                                      "children": [
+                                        {
+                                          "type": "StringLiteral",
+                                          "line": 73,
+                                          "detail": "\"price\"",
+                                          "children": [                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Assignment",
+                      "line": 74,
+                      "detail": "image_file",
+                      "children": [
+                        {
+                          "type": "Target",
+                          "line": 74,
+                          "detail": "image_file",
+                          "children": [                          ]
+                        },
+                        {
+                          "type": "FunctionCall",
+                          "line": 74,
+                          "children": [
+                            {
+                              "type": "MemberAccess",
+                              "line": 74,
+                              "detail": ".get",
+                              "children": [
+                                {
+                                  "type": "MemberAccess",
+                                  "line": 74,
+                                  "detail": ".files",
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 74,
+                                      "detail": "request",
+                                      "children": [                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 74,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "StringLiteral",
+                                  "line": 74,
+                                  "detail": "\"image\"",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "IfStatement",
+                      "line": 76,
+                      "children": [
+                        {
+                          "type": "GenericBinaryExpression",
+                          "line": 76,
+                          "detail": "and",
+                          "children": [
+                            {
+                              "type": "GenericBinaryExpression",
+                              "line": 76,
+                              "detail": "is",
+                              "children": [
+                                {
+                                  "type": "Identifier",
+                                  "line": 76,
+                                  "detail": "image_file",
+                                  "children": [                                  ]
+                                },
+                                {
+                                  "type": "NoneLiteral",
+                                  "line": 76,
+                                  "detail": "None",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "GenericBinaryExpression",
+                              "line": 76,
+                              "detail": "!=",
+                              "children": [
+                                {
+                                  "type": "MemberAccess",
+                                  "line": 76,
+                                  "detail": ".filename",
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 76,
+                                      "detail": "image_file",
+                                      "children": [                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "StringLiteral",
+                                  "line": 76,
+                                  "detail": "\"\"",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Block",
+                          "line": 76,
+                          "children": [
+                            {
+                              "type": "Assignment",
+                              "line": 77,
+                              "detail": "image_name",
+                              "children": [
+                                {
+                                  "type": "Target",
+                                  "line": 77,
+                                  "detail": "image_name",
+                                  "children": [                                  ]
+                                },
+                                {
+                                  "type": "FunctionCall",
+                                  "line": 77,
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 77,
+                                      "detail": "save_product_image",
+                                      "children": [                                      ]
+                                    },
+                                    {
+                                      "type": "Argument",
+                                      "line": 77,
+                                      "detail": "Positional",
+                                      "children": [
+                                        {
+                                          "type": "Identifier",
+                                          "line": 77,
+                                          "detail": "image_file",
+                                          "children": [                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "Argument",
+                                      "line": 77,
+                                      "detail": "Positional",
+                                      "children": [
+                                        {
+                                          "type": "Identifier",
+                                          "line": 77,
+                                          "detail": "product_id",
+                                          "children": [                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "IfStatement",
+                              "line": 79,
+                              "children": [
+                                {
+                                  "type": "GenericBinaryExpression",
+                                  "line": 79,
+                                  "detail": "is",
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 79,
+                                      "detail": "image_name",
+                                      "children": [                                      ]
+                                    },
+                                    {
+                                      "type": "NoneLiteral",
+                                      "line": 79,
+                                      "detail": "None",
+                                      "children": [                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Block",
+                                  "line": 79,
+                                  "children": [
+                                    {
+                                      "type": "ReturnStatement",
+                                      "line": 80,
+                                      "children": [
+                                        {
+                                          "type": "FunctionCall",
+                                          "line": 80,
+                                          "children": [
+                                            {
+                                              "type": "Identifier",
+                                              "line": 80,
+                                              "detail": "redirect",
+                                              "children": [                                              ]
+                                            },
+                                            {
+                                              "type": "Argument",
+                                              "line": 80,
+                                              "detail": "Positional",
+                                              "children": [
+                                                {
+                                                  "type": "FunctionCall",
+                                                  "line": 80,
+                                                  "children": [
+                                                    {
+                                                      "type": "Identifier",
+                                                      "line": 80,
+                                                      "detail": "url_for",
+                                                      "children": [                                                      ]
+                                                    },
+                                                    {
+                                                      "type": "Argument",
+                                                      "line": 80,
+                                                      "detail": "Positional",
+                                                      "children": [
+                                                        {
+                                                          "type": "StringLiteral",
+                                                          "line": 80,
+                                                          "detail": "\"edit_product\"",
+                                                          "children": [                                                          ]
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "type": "Argument",
+                                                      "line": 80,
+                                                      "detail": "Keyword: product_id",
+                                                      "children": [
+                                                        {
+                                                          "type": "Identifier",
+                                                          "line": 80,
+                                                          "detail": "product_id",
+                                                          "children": [                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Assignment",
+                              "line": 82,
+                              "detail": "product",
+                              "children": [
+                                {
+                                  "type": "Target",
+                                  "line": 82,
+                                  "detail": "product",
+                                  "children": [
+                                    {
+                                      "type": "IndexAccess",
+                                      "line": 82,
+                                      "children": [
+                                        {
+                                          "type": "StringLiteral",
+                                          "line": 82,
+                                          "detail": "\"image\"",
+                                          "children": [                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Identifier",
+                                  "line": 82,
+                                  "detail": "image_name",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ReturnStatement",
+                      "line": 84,
+                      "children": [
+                        {
+                          "type": "FunctionCall",
+                          "line": 84,
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 84,
+                              "detail": "redirect",
+                              "children": [                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 84,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "FunctionCall",
+                                  "line": 84,
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 84,
+                                      "detail": "url_for",
+                                      "children": [                                      ]
+                                    },
+                                    {
+                                      "type": "Argument",
+                                      "line": 84,
+                                      "detail": "Positional",
+                                      "children": [
+                                        {
+                                          "type": "StringLiteral",
+                                          "line": 84,
+                                          "detail": "\"index\"",
+                                          "children": [                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ReturnStatement",
+              "line": 85,
+              "children": [
+                {
+                  "type": "FunctionCall",
+                  "line": 85,
+                  "children": [
+                    {
+                      "type": "Identifier",
+                      "line": 85,
+                      "detail": "render_template",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 85,
+                      "detail": "Positional",
+                      "children": [
+                        {
+                          "type": "StringLiteral",
+                          "line": 85,
+                          "detail": "\"edit_product.jinja\"",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 85,
+                      "detail": "Keyword: product",
+                      "children": [
+                        {
+                          "type": "Identifier",
+                          "line": 85,
+                          "detail": "product",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 85,
+                      "detail": "Keyword: title",
+                      "children": [
+                        {
+                          "type": "StringLiteral",
+                          "line": 85,
+                          "detail": "\"Edit Product\"",
+                          "children": [                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FunctionDef",
+      "line": 87,
+      "detail": "product_details",
+      "children": [
+        {
+          "type": "Decorator",
+          "line": 87,
+          "detail": "@app.route",
+          "children": [
+            {
+              "type": "StringLiteral",
+              "line": 87,
+              "detail": "\"/product/<int:product_id>\"",
+              "children": [              ]
+            }
+          ]
+        },
+        {
+          "type": "ParameterList",
+          "line": 88,
+          "children": [
+            {
+              "type": "Parameter",
+              "line": 88,
+              "detail": "product_id",
+              "children": [              ]
+            }
+          ]
+        },
+        {
+          "type": "Block",
+          "line": 88,
+          "children": [
+            {
+              "type": "Assignment",
+              "line": 89,
+              "detail": "product",
+              "children": [
+                {
+                  "type": "Target",
+                  "line": 89,
+                  "detail": "product",
+                  "children": [                  ]
+                },
+                {
+                  "type": "FunctionCall",
+                  "line": 89,
+                  "children": [
+                    {
+                      "type": "Identifier",
+                      "line": 89,
+                      "detail": "next",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 90,
+                      "detail": "Positional",
+                      "children": [
+                        {
+                          "type": "ListExpression",
+                          "line": 90,
+                          "detail": "Comprehension (for p)",
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 90,
+                              "detail": "p",
+                              "children": [                              ]
+                            },
+                            {
+                              "type": "Identifier",
+                              "line": 90,
+                              "detail": "products",
+                              "children": [                              ]
+                            },
+                            {
+                              "type": "GenericBinaryExpression",
+                              "line": 90,
+                              "detail": "==",
+                              "children": [
+                                {
+                                  "type": "IndexExpression",
+                                  "line": 90,
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 90,
+                                      "detail": "p",
+                                      "children": [                                      ]
+                                    },
+                                    {
+                                      "type": "StringLiteral",
+                                      "line": 90,
+                                      "detail": "\"id\"",
+                                      "children": [                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Identifier",
+                                  "line": 90,
+                                  "detail": "product_id",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 91,
+                      "detail": "Positional",
+                      "children": [
+                        {
+                          "type": "NoneLiteral",
+                          "line": 91,
+                          "detail": "None",
+                          "children": [                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "IfStatement",
+              "line": 94,
+              "children": [
+                {
+                  "type": "Identifier",
+                  "line": 94,
+                  "detail": "product",
+                  "children": [                  ]
+                },
+                {
+                  "type": "Block",
+                  "line": 94,
+                  "children": [
+                    {
+                      "type": "ReturnStatement",
+                      "line": 95,
+                      "children": [
+                        {
+                          "type": "FunctionCall",
+                          "line": 95,
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 95,
+                              "detail": "redirect",
+                              "children": [                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 95,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "FunctionCall",
+                                  "line": 95,
+                                  "children": [
+                                    {
+                                      "type": "Identifier",
+                                      "line": 95,
+                                      "detail": "url_for",
+                                      "children": [                                      ]
+                                    },
+                                    {
+                                      "type": "Argument",
+                                      "line": 95,
+                                      "detail": "Positional",
+                                      "children": [
+                                        {
+                                          "type": "StringLiteral",
+                                          "line": 95,
+                                          "detail": "\"index\"",
+                                          "children": [                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ReturnStatement",
+              "line": 97,
+              "children": [
+                {
+                  "type": "FunctionCall",
+                  "line": 97,
+                  "children": [
+                    {
+                      "type": "Identifier",
+                      "line": 97,
+                      "detail": "render_template",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 98,
+                      "detail": "Positional",
+                      "children": [
+                        {
+                          "type": "StringLiteral",
+                          "line": 98,
+                          "detail": "\"product_details.jinja\"",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 99,
+                      "detail": "Keyword: product",
+                      "children": [
+                        {
+                          "type": "Identifier",
+                          "line": 99,
+                          "detail": "product",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 100,
+                      "detail": "Keyword: title",
+                      "children": [
+                        {
+                          "type": "StringLiteral",
+                          "line": 100,
+                          "detail": "\"Product Details\"",
+                          "children": [                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FunctionDef",
+      "line": 103,
+      "detail": "delete_product",
+      "children": [
+        {
+          "type": "Decorator",
+          "line": 103,
+          "detail": "@app.route",
+          "children": [
+            {
+              "type": "StringLiteral",
+              "line": 103,
+              "detail": "\"/delete/<int:product_id>\"",
+              "children": [              ]
+            }
+          ]
+        },
+        {
+          "type": "ParameterList",
+          "line": 104,
+          "children": [
+            {
+              "type": "Parameter",
+              "line": 104,
+              "detail": "product_id",
+              "children": [              ]
+            }
+          ]
+        },
+        {
+          "type": "Block",
+          "line": 104,
+          "children": [
+            {
+              "type": "Assignment",
+              "line": 105,
+              "detail": "new_list",
+              "children": [
+                {
+                  "type": "Target",
+                  "line": 105,
+                  "detail": "new_list",
+                  "children": [                  ]
+                },
+                {
+                  "type": "ListExpression",
+                  "line": 105,
+                  "detail": "Size: 0",
+                  "children": [                  ]
+                }
+              ]
+            },
+            {
+              "type": "ForStatement",
+              "line": 106,
+              "detail": "Iter: p",
+              "children": [
+                {
+                  "type": "Identifier",
+                  "line": 106,
+                  "detail": "products",
+                  "children": [                  ]
+                },
+                {
+                  "type": "Block",
+                  "line": 106,
+                  "children": [
+                    {
+                      "type": "IfStatement",
+                      "line": 107,
+                      "children": [
+                        {
+                          "type": "GenericBinaryExpression",
+                          "line": 107,
+                          "detail": "!=",
+                          "children": [
+                            {
+                              "type": "IndexExpression",
+                              "line": 107,
+                              "children": [
+                                {
+                                  "type": "Identifier",
+                                  "line": 107,
+                                  "detail": "p",
+                                  "children": [                                  ]
+                                },
+                                {
+                                  "type": "StringLiteral",
+                                  "line": 107,
+                                  "detail": "\"id\"",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Identifier",
+                              "line": 107,
+                              "detail": "product_id",
+                              "children": [                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Block",
+                          "line": 107,
+                          "children": [
+                            {
+                              "type": "ExpressionStatement",
+                              "line": 108,
+                              "children": [
+                                {
+                                  "type": "FunctionCall",
+                                  "line": 108,
+                                  "children": [
+                                    {
+                                      "type": "MemberAccess",
+                                      "line": 108,
+                                      "detail": ".append",
+                                      "children": [
+                                        {
+                                          "type": "Identifier",
+                                          "line": 108,
+                                          "detail": "new_list",
+                                          "children": [                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "Argument",
+                                      "line": 108,
+                                      "detail": "Positional",
+                                      "children": [
+                                        {
+                                          "type": "Identifier",
+                                          "line": 108,
+                                          "detail": "p",
+                                          "children": [                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ExpressionStatement",
+              "line": 109,
+              "children": [
+                {
+                  "type": "FunctionCall",
+                  "line": 109,
+                  "children": [
+                    {
+                      "type": "MemberAccess",
+                      "line": 109,
+                      "detail": ".clear",
+                      "children": [
+                        {
+                          "type": "Identifier",
+                          "line": 109,
+                          "detail": "products",
+                          "children": [                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ForStatement",
+              "line": 110,
+              "detail": "Iter: p",
+              "children": [
+                {
+                  "type": "Identifier",
+                  "line": 110,
+                  "detail": "new_list",
+                  "children": [                  ]
+                },
+                {
+                  "type": "Block",
+                  "line": 110,
+                  "children": [
+                    {
+                      "type": "ExpressionStatement",
+                      "line": 111,
+                      "children": [
+                        {
+                          "type": "FunctionCall",
+                          "line": 111,
+                          "children": [
+                            {
+                              "type": "MemberAccess",
+                              "line": 111,
+                              "detail": ".append",
+                              "children": [
+                                {
+                                  "type": "Identifier",
+                                  "line": 111,
+                                  "detail": "products",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 111,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "Identifier",
+                                  "line": 111,
+                                  "detail": "p",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ReturnStatement",
+              "line": 112,
+              "children": [
+                {
+                  "type": "FunctionCall",
+                  "line": 112,
+                  "children": [
+                    {
+                      "type": "Identifier",
+                      "line": 112,
+                      "detail": "redirect",
+                      "children": [                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 112,
+                      "detail": "Positional",
+                      "children": [
+                        {
+                          "type": "FunctionCall",
+                          "line": 112,
+                          "children": [
+                            {
+                              "type": "Identifier",
+                              "line": 112,
+                              "detail": "url_for",
+                              "children": [                              ]
+                            },
+                            {
+                              "type": "Argument",
+                              "line": 112,
+                              "detail": "Positional",
+                              "children": [
+                                {
+                                  "type": "StringLiteral",
+                                  "line": 112,
+                                  "detail": "\"index\"",
+                                  "children": [                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "IfStatement",
+      "line": 114,
+      "children": [
+        {
+          "type": "GenericBinaryExpression",
+          "line": 114,
+          "detail": "==",
+          "children": [
+            {
+              "type": "Identifier",
+              "line": 114,
+              "detail": "__name__",
+              "children": [              ]
+            },
+            {
+              "type": "StringLiteral",
+              "line": 114,
+              "detail": "\"__main__\"",
+              "children": [              ]
+            }
+          ]
+        },
+        {
+          "type": "Block",
+          "line": 114,
+          "children": [
+            {
+              "type": "ExpressionStatement",
+              "line": 115,
+              "children": [
+                {
+                  "type": "FunctionCall",
+                  "line": 115,
+                  "children": [
+                    {
+                      "type": "MemberAccess",
+                      "line": 115,
+                      "detail": ".run",
+                      "children": [
+                        {
+                          "type": "Identifier",
+                          "line": 115,
+                          "detail": "app",
+                          "children": [                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Argument",
+                      "line": 115,
+                      "detail": "Keyword: debug",
+                      "children": [
+                        {
+                          "type": "BooleanLiteral",
+                          "line": 115,
+                          "detail": "true",
+                          "children": [                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "contextData": {
+    "products": [
+      {
+        "id": 1.0,
+        "name": "Phone",
+        "price": 300.0,
+        "image": "phone.png"
+      },
+      {
+        "id": 2.0,
+        "name": "Laptop",
+        "price": 800.0,
+        "image": "laptop.png"
+      },
+      {
+        "id": 3.0,
+        "name": "Headset",
+        "price": 50.0,
+        "image": "headset.png"
+      },
+      {
+        "id": 4.0,
+        "name": "Smart Watch",
+        "price": 150.0,
+        "image": "smart_watch.png"
+      },
+      {
+        "id": 5.0,
+        "name": "iPad",
+        "price": 450.0,
+        "image": "ipad.png"
+      },
+      {
+        "id": 6.0,
+        "name": "Camera",
+        "price": 650.0,
+        "image": "camera.png"
+      },
+      {
+        "id": 7.0,
+        "name": "Keyboard",
+        "price": 80.0,
+        "image": "keyboard.png"
+      }
+    ]
+  },
+  "templateContexts": {
+    "index.jinja": {
+      "products": [
+        {
+          "id": 1.0,
+          "name": "Phone",
+          "price": 300.0,
+          "image": "phone.png"
+        },
+        {
+          "id": 2.0,
+          "name": "Laptop",
+          "price": 800.0,
+          "image": "laptop.png"
+        },
+        {
+          "id": 3.0,
+          "name": "Headset",
+          "price": 50.0,
+          "image": "headset.png"
+        },
+        {
+          "id": 4.0,
+          "name": "Smart Watch",
+          "price": 150.0,
+          "image": "smart_watch.png"
+        },
+        {
+          "id": 5.0,
+          "name": "iPad",
+          "price": 450.0,
+          "image": "ipad.png"
+        },
+        {
+          "id": 6.0,
+          "name": "Camera",
+          "price": 650.0,
+          "image": "camera.png"
+        },
+        {
+          "id": 7.0,
+          "name": "Keyboard",
+          "price": 80.0,
+          "image": "keyboard.png"
+        }
+      ],
+      "title": "Product Store"
+    },
+    "add_product.jinja": {
+      "title": "Add Product"
+    },
+    "edit_product.jinja": {
+      "product": null,
+      "title": "Edit Product"
+    },
+    "product_details.jinja": {
+      "product": null,
+      "title": "Product Details"
+    }
+  }
+}

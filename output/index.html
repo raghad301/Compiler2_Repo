@@ -1,0 +1,40 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Product Store</title>
+<link rel="stylesheet" href="style.css"><script src="script.js" defer></script>
+</head>
+<body data-page="index"><main class="container"><header class="page-header"><div><p class="eyebrow">Compiler Store</p>
+<h1>Products List</h1>
+</div>
+<a class="button primary" href="add_product.html">Add New Product</a></header>
+<section id="products-list" class="products" aria-label="Products"><article class="product-card" data-product-id="1" data-product-name="Phone" data-product-price="300" data-product-image="phone.png"><img class="product-image" src="pics/phone.png" alt="Phone"><h2>Phone</h2>
+<p class="price">$300</p>
+<nav class="card-actions" aria-label="Actions for Phone"><a href="product_details.html?product_id=1">Details</a><a href="edit_product.html?product_id=1">Edit</a><a class="danger delete-link" href="index.html?delete_product=1">Delete</a></nav>
+</article>
+<article class="product-card" data-product-id="2" data-product-name="Laptop" data-product-price="800" data-product-image="laptop.png"><img class="product-image" src="pics/laptop.png" alt="Laptop"><h2>Laptop</h2>
+<p class="price">$800</p>
+<nav class="card-actions" aria-label="Actions for Laptop"><a href="product_details.html?product_id=2">Details</a><a href="edit_product.html?product_id=2">Edit</a><a class="danger delete-link" href="index.html?delete_product=2">Delete</a></nav>
+</article>
+<article class="product-card" data-product-id="3" data-product-name="Headset" data-product-price="50" data-product-image="headset.png"><img class="product-image" src="pics/headset.png" alt="Headset"><h2>Headset</h2>
+<p class="price">$50</p>
+<nav class="card-actions" aria-label="Actions for Headset"><a href="product_details.html?product_id=3">Details</a><a href="edit_product.html?product_id=3">Edit</a><a class="danger delete-link" href="index.html?delete_product=3">Delete</a></nav>
+</article>
+<article class="product-card" data-product-id="4" data-product-name="Smart Watch" data-product-price="150" data-product-image="smart_watch.png"><img class="product-image" src="pics/smart_watch.png" alt="Smart Watch"><h2>Smart Watch</h2>
+<p class="price">$150</p>
+<nav class="card-actions" aria-label="Actions for Smart Watch"><a href="product_details.html?product_id=4">Details</a><a href="edit_product.html?product_id=4">Edit</a><a class="danger delete-link" href="index.html?delete_product=4">Delete</a></nav>
+</article>
+<article class="product-card" data-product-id="5" data-product-name="iPad" data-product-price="450" data-product-image="ipad.png"><img class="product-image" src="pics/ipad.png" alt="iPad"><h2>iPad</h2>
+<p class="price">$450</p>
+<nav class="card-actions" aria-label="Actions for iPad"><a href="product_details.html?product_id=5">Details</a><a href="edit_product.html?product_id=5">Edit</a><a class="danger delete-link" href="index.html?delete_product=5">Delete</a></nav>
+</article>
+<article class="product-card" data-product-id="6" data-product-name="Camera" data-product-price="650" data-product-image="camera.png"><img class="product-image" src="pics/camera.png" alt="Camera"><h2>Camera</h2>
+<p class="price">$650</p>
+<nav class="card-actions" aria-label="Actions for Camera"><a href="product_details.html?product_id=6">Details</a><a href="edit_product.html?product_id=6">Edit</a><a class="danger delete-link" href="index.html?delete_product=6">Delete</a></nav>
+</article>
+<article class="product-card" data-product-id="7" data-product-name="Keyboard" data-product-price="80" data-product-image="keyboard.png"><img class="product-image" src="pics/keyboard.png" alt="Keyboard"><h2>Keyboard</h2>
+<p class="price">$80</p>
+<nav class="card-actions" aria-label="Actions for Keyboard"><a href="product_details.html?product_id=7">Details</a><a href="edit_product.html?product_id=7">Edit</a><a class="danger delete-link" href="index.html?delete_product=7">Delete</a></nav>
+</article>
+</section>
+<p id="empty-state" class="empty-state" hidden>No products available.</p>
+</main>
+</body>
+</html>
