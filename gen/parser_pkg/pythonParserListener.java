@@ -1,4 +1,4 @@
-// Generated from D:/CompilerProjectRepo/CompilerProject1_IT4-main/src/parser_pkg/pythonParser.g4 by ANTLR 4.13.2
+// Generated from D:/Downloads/Telegram Desktop/Compiler2_Repo (2)/Compiler2_Repo/src/parser_pkg/pythonParser.g4 by ANTLR 4.13.2
 package parser_pkg;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -28,25 +28,113 @@ public interface pythonParserListener extends ParseTreeListener {
 	 */
 	void exitStatement(pythonParser.StatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link pythonParser#simple_stmt}.
+	 * Enter a parse tree produced by the {@code importSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterSimple_stmt(pythonParser.Simple_stmtContext ctx);
+	void enterImportSimple(pythonParser.ImportSimpleContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link pythonParser#simple_stmt}.
+	 * Exit a parse tree produced by the {@code importSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitSimple_stmt(pythonParser.Simple_stmtContext ctx);
+	void exitImportSimple(pythonParser.ImportSimpleContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link pythonParser#compound_stmt}.
+	 * Enter a parse tree produced by the {@code assignmentSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterCompound_stmt(pythonParser.Compound_stmtContext ctx);
+	void enterAssignmentSimple(pythonParser.AssignmentSimpleContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link pythonParser#compound_stmt}.
+	 * Exit a parse tree produced by the {@code assignmentSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitCompound_stmt(pythonParser.Compound_stmtContext ctx);
+	void exitAssignmentSimple(pythonParser.AssignmentSimpleContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code returnSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterReturnSimple(pythonParser.ReturnSimpleContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code returnSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitReturnSimple(pythonParser.ReturnSimpleContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code expressionSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpressionSimple(pythonParser.ExpressionSimpleContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code expressionSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpressionSimple(pythonParser.ExpressionSimpleContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code logicExpressionSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterLogicExpressionSimple(pythonParser.LogicExpressionSimpleContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code logicExpressionSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitLogicExpressionSimple(pythonParser.LogicExpressionSimpleContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code functionCompound}
+	 * labeled alternative in {@link pythonParser#compound_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionCompound(pythonParser.FunctionCompoundContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code functionCompound}
+	 * labeled alternative in {@link pythonParser#compound_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionCompound(pythonParser.FunctionCompoundContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ifCompound}
+	 * labeled alternative in {@link pythonParser#compound_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfCompound(pythonParser.IfCompoundContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ifCompound}
+	 * labeled alternative in {@link pythonParser#compound_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfCompound(pythonParser.IfCompoundContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code whileCompound}
+	 * labeled alternative in {@link pythonParser#compound_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhileCompound(pythonParser.WhileCompoundContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code whileCompound}
+	 * labeled alternative in {@link pythonParser#compound_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhileCompound(pythonParser.WhileCompoundContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code forCompound}
+	 * labeled alternative in {@link pythonParser#compound_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterForCompound(pythonParser.ForCompoundContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code forCompound}
+	 * labeled alternative in {@link pythonParser#compound_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitForCompound(pythonParser.ForCompoundContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link pythonParser#importStatement}.
 	 * @param ctx the parse tree

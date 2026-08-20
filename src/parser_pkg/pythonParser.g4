@@ -14,18 +14,18 @@ statement
     ;
 
 simple_stmt:
-      importStatement
-    | assignment
-    | returnStatement
-    | expressionStatement
-    | logic_expr
+      importStatement      #importSimple
+    | assignment           #assignmentSimple
+    | returnStatement      #returnSimple
+    | expressionStatement  #expressionSimple
+    | logic_expr           #logicExpressionSimple
     ;
 
 compound_stmt:
-      functionDef
-    | ifStatement
-    | whileStatement
-    | forStatement
+      functionDef    #functionCompound
+    | ifStatement    #ifCompound
+    | whileStatement #whileCompound
+    | forStatement   #forCompound
     ;
 
 importStatement:

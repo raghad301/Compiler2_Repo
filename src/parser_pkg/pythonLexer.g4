@@ -1,11 +1,16 @@
 lexer grammar pythonLexer;
 
+// Python indentation tokens are emitted manually by nextToken().
+// Declaring them here avoids empty lexer rules that can match without input.
+tokens { INDENT, DEDENT }
+
 @members {
 
     private java.util.Queue<Token> tokens = new java.util.LinkedList<>();
     private java.util.Stack<Integer> indents = new java.util.Stack<>();
     private boolean reachedEof = false;
     private int bracketDepth = 0;
+    private int lastTokenType = Token.INVALID_TYPE;
 
     private void init() {
         if (indents.isEmpty()) {
@@ -18,7 +23,9 @@ lexer grammar pythonLexer;
         init();
 
         if (!tokens.isEmpty()) {
-            return tokens.poll();
+            Token queued = tokens.poll();
+            lastTokenType = queued.getType();
+            return queued;
         }
 
         Token token = super.nextToken();
@@ -30,6 +37,9 @@ lexer grammar pythonLexer;
                 }
 
         if (token.getType() == EOF) {
+            if (!reachedEof && lastTokenType != NEWLINE && lastTokenType != DEDENT) {
+                tokens.offer(createToken(NEWLINE, "\n"));
+            }
             while (indents.size() > 1) {
                 indents.pop();
                 tokens.offer(createToken(DEDENT, ""));
@@ -37,7 +47,9 @@ lexer grammar pythonLexer;
 
             tokens.offer(token);
             reachedEof = true;
-            return tokens.poll();
+            Token queued = tokens.poll();
+            lastTokenType = queued.getType();
+            return queued;
         }
 
         if (token.getType() == NEWLINE) {
@@ -79,9 +91,12 @@ lexer grammar pythonLexer;
                 }
             }
 
-            return tokens.poll();
+            Token queued = tokens.poll();
+            lastTokenType = queued.getType();
+            return queued;
         }
 
+        lastTokenType = token.getType();
         return token;
     }
 
@@ -157,5 +172,3 @@ WS
 COMMENT: '#' ~[\r\n]* -> skip;
 
 NEWLINE : '\r'? '\n' [ \t]* ;
-INDENT : ;
-DEDENT : ;

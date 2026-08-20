@@ -2,201 +2,484 @@ package Semantic;
 
 import AST.Web.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WebSemanticAnalyzer {
 
     private final List<SemanticError> errors = new ArrayList<>();
-
-    // تتبع النطاقات (Scopes) للمتغيرات المعرفة ديناميكياً
     private final LinkedList<Set<String>> scopeStack = new LinkedList<>();
+    private final LinkedList<Map<String, Object>> valueScopeStack = new LinkedList<>();
+    private final Set<String> knownLoopVariables = new HashSet<>();
+    private Set<String> pythonContextVars = new HashSet<>();
+    private Map<String, Object> pythonContextValues = new HashMap<>();
 
-    // تتبع أنواع المتغيرات (Type Env) لعمل الـ Type Checking
-    private final Map<String, String> variableTypes = new HashMap<>();
+    private static final Object UNKNOWN_VALUE = new Object();
 
-    // المتغيرات الممررة من الفلاسك كـ Context آمن (تكون فارغة لغرض فحص النقص)
-    private final Set<String> flaskProvidedContext = new HashSet<>();
+    private static final Set<String> JINJA_BUILTINS = Set.of(
+            "true", "false", "none", "loop", "url_for", "request", "session",
+            "g", "config", "range", "len", "str", "int", "float", "list", "dict",
+            "get_flashed_messages", "super", "self"
+    );
+
+    private static final Set<String> JINJA_KEYWORDS = Set.of(
+            "and", "or", "not", "in", "is", "if", "else"
+    );
+
+    private static final Pattern IDENTIFIER_PATTERN =
+            Pattern.compile("[A-Za-z_][A-Za-z0-9_]*");
+    private static final Pattern PROPERTY_CHAIN_PATTERN = Pattern.compile(
+            "([A-Za-z_][A-Za-z0-9_]*)(?:\\s*\\.\\s*([A-Za-z_][A-Za-z0-9_]*))+"
+    );
 
     public WebSemanticAnalyzer() {
-        // النطاق العالمي الافتراضي
         scopeStack.addFirst(new HashSet<>());
+        valueScopeStack.addFirst(new HashMap<>());
     }
 
-    /**
-     * الدالة الشاملة والنهائية: تفحص الشجرة بشكل كامل وتكتشف الأخطاء الخمسة معاً ديناميكياً
-     */
-    public void analyze(HtmlDocument doc) {
-        if (doc == null) return;
-
-        // تصفير البيانات والأخطاء عند كل Run جديد لضمان الديناميكية
-        errors.clear();
-        variableTypes.clear();
-        scopeStack.clear();
-        scopeStack.addFirst(new HashSet<>()); // إعادة بناء الـ Global Scope
-
-        // قراءة الـ AST المولد من الشجرة وتفكيكه سطر بسطر
-        String astString = doc.toString();
-        String[] lines = astString.split("\n");
-
-        // متغبرات لمساعدتنا في تتبع الـ Scopes للشرطية {% if %}
-        boolean insideIfBlock = false;
-
-        for (String line : lines) {
-
-            // -----------------------------------------------------------
-            // 1. تتبع بلوكات الـ JinjaSet لتعريف المتغيرات واستنتاج أنواعها
-            // -----------------------------------------------------------
-            if (line.contains("JinjaSet")) {
-                try {
-                    int startName = line.indexOf("Variable: ") + 10;
-                    int endName = line.contains(")") ? line.indexOf(")") : line.length();
-                    String varName = line.substring(startName, endName).trim();
-
-                    int startLine = line.indexOf("(Line: ") + 7;
-                    int endLine = line.lastIndexOf(")");
-                    int lineNumber = Integer.parseInt(line.substring(startLine, endLine).trim());
-
-                    // إضافة المتغير للنطاق الحالي (العلوي أو الداخلي للـ IF)
-                    scopeStack.peekFirst().add(varName);
-
-                    // --- [Type Mismatch Check] ---
-                    // استنتاج النوع بناءً على محتوى كود الاختبار الحالي دلالياً
-                    if (varName.equals("original_price") || varName.equals("preview_price") || varName.equals("final_price")) {
-                        variableTypes.put(varName, "Number");
-                    } else if (varName.equals("discount_rate") || varName.equals("p_name") || varName.equals("preview_name")) {
-                        // محاكاة كشف النوع إذا كانت القيمة نصية في الاختبار الثالث
-                        if (astString.contains("discount_rate = \"Ten Percent\"") || astString.contains("discount_rate = \"fifteen percent\"")) {
-                            variableTypes.put(varName, "String");
-                        } else {
-                            variableTypes.put(varName, "Number"); // كوضع افتراضي
-                        }
-                    }
-
-                    // فحص خطأ عدم تطابق الأنواع (الاختبار 3)
-                    if (varName.equals("final_price")) {
-                        String t1 = variableTypes.getOrDefault("original_price", "Number");
-                        String t2 = variableTypes.getOrDefault("discount_rate", "Number");
-                        if (t1.equals("String") || t2.equals("String")) {
-                            errors.add(new SemanticError(
-                                    "Type Mismatch: Cannot apply operator '*' between original_price (" + t1 + ") and discount_rate (" + t2 + ").",
-                                    lineNumber
-                            ));
-                        }
-                    }
-                } catch (Exception e) {}
-            }
-
-            // -----------------------------------------------------------
-            // 2. محاكاة تتبع فتح وإغلاق النطاقات لـ [Scope Error] (الاختبار 2)
-            // -----------------------------------------------------------
-            if (line.contains("HtmlElement [if]") || line.contains("JinjaIf")) {
-                enterScope();
-                insideIfBlock = true;
-            }
-            // عند انتهاء البلوك الشرطي (يمكن تمثيله بنهاية عقد الأطفال أو الاستدلال النصي)
-            if (line.contains("EndIf") || (insideIfBlock && line.contains("VariableNode [local_if_var]") && !astString.contains("JinjaSet (Variable: local_if_var)"))) {
-                // إذا حاولنا الوصول لـ local_if_var وهو غير مسجل في الـ Global Scope بل كان في نطاق داخلي مغلق
-                try {
-                    int startLine = line.indexOf("(Line: ") + 7;
-                    int endLine = line.lastIndexOf(")");
-                    int lineNumber = Integer.parseInt(line.substring(startLine, endLine).trim());
-
-                    if (line.contains("local_if_var") && !isVariableInGlobalScope("local_if_var")) {
-                        errors.add(new SemanticError(
-                                "Scope Error: Variable 'local_if_var' is accessed outside or before its valid block scope.",
-                                lineNumber
-                        ));
-                    }
-                } catch (Exception e) {}
-            }
-
-            // -----------------------------------------------------------
-            // 3. فحص الـ VariableNode لـ [Undefined] و [Type Error] و [Missing Flask]
-            // -----------------------------------------------------------
-            if (line.contains("VariableNode")) {
-                try {
-                    int startName = line.indexOf("[") + 1;
-                    int endName = line.indexOf("]");
-                    String varName = line.substring(startName, endName).trim();
-
-                    int startLine = line.indexOf("(Line: ") + 7;
-                    int endLine = line.lastIndexOf(")");
-                    int lineNumber = Integer.parseInt(line.substring(startLine, endLine).trim());
-
-                    // أ. فحص [Type Error] المنطقي (الاختبار 4)
-                    if (varName.equals("final_price") && astString.contains("\"One Thousand\"")) {
-                        errors.add(new SemanticError(
-                                "Type Error: Relational operation '<' is invalid between 'final_price' (Number) and '\"One Thousand\"' (String).",
-                                lineNumber
-                        ));
-                        continue; // تفادي تكرار الخطأ كـ Undefined
-                    }
-
-                    // ب. فحص [Missing Flask Variable] (الاختبار 5)
-                    if (varName.equals("title") || varName.equals("products")) {
-                        if (!flaskProvidedContext.contains(varName)) {
-                            errors.add(new SemanticError(
-                                    "Missing Flask Variable: The context variable '" + varName + "' is expected by the web template but was not provided by the Flask controller.",
-                                    lineNumber
-                            ));
-                            continue;
-                        }
-                    }
-
-                    // ج. فحص [Undefined Variable] (الاختبار 1)
-                    if (!isVariableDefined(varName) && !flaskProvidedContext.contains(varName)) {
-                        // التأكد أن المتغير ليس حلقة تكرار معرفة بالـ For
-                        if (!varName.equals("product") && !varName.equals("local_if_var") && !varName.equals("status")) {
-                            errors.add(new SemanticError(
-                                    "Undefined variable '" + varName + "' in the current web context.",
-                                    lineNumber
-                            ));
-                        }
-                    }
-                } catch (Exception e) {}
+    public void setPythonContext(Set<String> contextVars) {
+        if (contextVars != null) {
+            this.pythonContextVars = new HashSet<>(contextVars);
+            this.pythonContextValues = new HashMap<>();
+            for (String variable : contextVars) {
+                this.pythonContextValues.put(variable, UNKNOWN_VALUE);
             }
         }
     }
 
-    private boolean isVariableDefined(String name) {
-        for (Set<String> scope : scopeStack) {
-            if (scope.contains(name)) {
-                return true;
+    public void setPythonContext(Map<String, Object> context) {
+        this.pythonContextVars = new HashSet<>();
+        this.pythonContextValues = new HashMap<>();
+        if (context == null) return;
+
+        this.pythonContextVars.addAll(context.keySet());
+        for (Map.Entry<String, Object> entry : context.entrySet()) {
+            this.pythonContextValues.put(
+                    entry.getKey(),
+                    entry.getValue() == null ? UNKNOWN_VALUE : entry.getValue());
+        }
+    }
+
+    public void analyze(HtmlDocument doc) {
+        if (doc == null) return;
+
+        errors.clear();
+        scopeStack.clear();
+        scopeStack.addFirst(new HashSet<>());
+        valueScopeStack.clear();
+        valueScopeStack.addFirst(new HashMap<>());
+        knownLoopVariables.clear();
+
+        visitNode(doc);
+    }
+
+    private void visitNode(HtmlNode node) {
+        if (node == null) return;
+
+        if (node instanceof HtmlDocument) {
+            for (HtmlNode child : ((HtmlDocument) node).getChildren()) {
+                visitNode(child);
             }
+        }
+        else if (node instanceof HtmlElement) {
+            HtmlElement elem = (HtmlElement) node;
+            for (HtmlAttribute attr : elem.getAttributes()) {
+                visitNode(attr);
+            }
+            for (HtmlNode child : elem.getChildren()) {
+                visitNode(child);
+            }
+        }
+
+        else if (node instanceof HtmlSelfClosingElement) {
+            HtmlSelfClosingElement element =
+                    (HtmlSelfClosingElement) node;
+
+            for (HtmlAttribute attribute
+                    : element.getAttributes()) {
+                visitNode(attribute);
+            }
+        }
+
+        else if (node instanceof HtmlAttribute) {
+            HtmlAttribute attribute =
+                    (HtmlAttribute) node;
+
+            for (AttributeValuePart part
+                    : attribute.getParts()) {
+
+                if (part
+                        instanceof AttributeJinjaExpression) {
+
+                    AttributeJinjaExpression
+                            jinjaPart =
+                            (AttributeJinjaExpression) part;
+
+                    if (jinjaPart.getExpression()
+                            != null) {
+                        visitNode(
+                                jinjaPart.getExpression()
+                        );
+                    }
+                }
+            }
+        }
+
+        else if (node instanceof HtmlSetStatement) {
+            HtmlSetStatement setStatement =
+                    (HtmlSetStatement) node;
+
+            checkVariableReference(
+                    setStatement.getExpression(),
+                    setStatement.getLine()
+            );
+
+            if (setStatement.getVarName() != null) {
+                String variable = setStatement.getVarName().trim();
+                if (scopeStack.peekFirst().contains(variable)) {
+                    errors.add(new SemanticError(
+                            "Duplicate Set Error: Variable '" + variable
+                                    + "' is already defined in this Jinja scope.",
+                            setStatement.getLine()));
+                } else {
+                    scopeStack.peekFirst().add(variable);
+                    valueScopeStack.peekFirst().put(
+                            variable,
+                            inferExpressionValue(setStatement.getExpression()));
+                }
+            }
+        }
+
+        else if (node instanceof HtmlForBlock) {
+            HtmlForBlock forBlock = (HtmlForBlock) node;
+
+            String rawLoopVar = forBlock.getLoopVar() != null ? forBlock.getLoopVar().trim() : "";
+            String rawIterable = forBlock.getIterable() != null ? forBlock.getIterable().trim() : "";
+
+            String loopVar = "";
+            String iterable = rawIterable;
+
+            if (rawLoopVar.contains(" in ")) {
+                String[] parts = rawLoopVar.split("\\s+in\\s+");
+                loopVar = parts[0].trim();
+                if (iterable.isEmpty() && parts.length > 1) {
+                    iterable = parts[1].trim();
+                }
+            } else {
+                loopVar = rawLoopVar;
+            }
+
+            if (!iterable.isEmpty()) {
+                checkVariableReference(iterable, forBlock.getLine());
+                Object iterableValue = resolveSimpleExpression(iterable);
+                if (iterableValue != UNKNOWN_VALUE && !isIterableValue(iterableValue)) {
+                    errors.add(new SemanticError(
+                            "Iterable Type Error: Expression '" + iterable
+                                    + "' is not a list or iterable collection.",
+                            forBlock.getLine()));
+                }
+            }
+
+            enterScope();
+            if (!loopVar.isEmpty()) {
+                Object loopValue = firstIterableValue(resolveSimpleExpression(iterable));
+                String[] variables = loopVar.split(",");
+                for (String v : variables) {
+                    String variable = v.trim();
+                    scopeStack.peekFirst().add(variable);
+                    valueScopeStack.peekFirst().put(variable, loopValue);
+                    knownLoopVariables.add(variable);
+                }
+            }
+
+            if (forBlock.getBody() != null) {
+                for (HtmlNode child : forBlock.getBody()) {
+                    visitNode(child);
+                }
+            }
+            exitScope();
+        }
+
+        else if (node instanceof HtmlIfBlock) {
+            HtmlIfBlock ifBlock =
+                    (HtmlIfBlock) node;
+
+            checkVariableReference(
+                    ifBlock.getCondition(),
+                    ifBlock.getLine()
+            );
+
+            enterScope();
+
+            for (HtmlNode child
+                    : ifBlock.getThenBranch()) {
+                visitNode(child);
+            }
+
+            exitScope();
+
+            for (HtmlElifBranch elifBranch
+                    : ifBlock.getElifBranches()) {
+
+                checkVariableReference(
+                        elifBranch.getCondition(),
+                        elifBranch.getLine()
+                );
+
+                enterScope();
+
+                for (HtmlNode child
+                        : elifBranch.getBody()) {
+                    visitNode(child);
+                }
+
+                exitScope();
+            }
+
+            if (!ifBlock.getElseBranch().isEmpty()) {
+                enterScope();
+
+                for (HtmlNode child
+                        : ifBlock.getElseBranch()) {
+                    visitNode(child);
+                }
+
+                exitScope();
+            }
+        }
+
+        else if (node instanceof HtmlExpressionBlock) {
+            HtmlExpressionBlock exprBlock = (HtmlExpressionBlock) node;
+            checkVariableReference(exprBlock.getExpression(), exprBlock.getLine());
+        }
+    }
+
+    private void checkVariableReference(String rawExpression, int line) {
+        if (rawExpression == null || rawExpression.isBlank()) {
+            return;
+        }
+
+        String expression = maskStringLiterals(rawExpression.trim());
+        Matcher matcher = IDENTIFIER_PATTERN.matcher(expression);
+        Set<String> checkedVariables = new HashSet<>();
+
+        while (matcher.find()) {
+            String identifier = matcher.group();
+            String lowerIdentifier = identifier.toLowerCase(Locale.ROOT);
+
+            if (JINJA_KEYWORDS.contains(lowerIdentifier)
+                    || JINJA_BUILTINS.contains(lowerIdentifier)) {
+                continue;
+            }
+
+            char previous = previousNonWhitespace(
+                    expression,
+                    matcher.start() - 1
+            );
+
+            if (previous == '.' || previous == '|') {
+                continue;
+            }
+
+            int nextIndex = nextNonWhitespaceIndex(
+                    expression,
+                    matcher.end()
+            );
+
+            if (nextIndex >= 0
+                    && expression.charAt(nextIndex) == '='
+                    && (nextIndex + 1 >= expression.length()
+                    || expression.charAt(nextIndex + 1) != '=')) {
+                continue;
+            }
+
+            if (!checkedVariables.add(identifier)) {
+                continue;
+            }
+
+            if (!isDeclared(identifier)) {
+                String message = knownLoopVariables.contains(identifier)
+                        ? "Loop Scope Error: Loop variable '" + identifier
+                                + "' is used outside its loop scope."
+                        : "Undefined Variable Error: Variable '" + identifier
+                                + "' is not defined in Jinja scope or Python context.";
+                errors.add(new SemanticError(message, line));
+            }
+        }
+
+        validatePropertyChains(expression, line);
+    }
+
+    private String maskStringLiterals(String expression) {
+        StringBuilder result = new StringBuilder(expression);
+        char quote = 0;
+        boolean escaped = false;
+
+        for (int i = 0; i < result.length(); i++) {
+            char current = result.charAt(i);
+
+            if (quote != 0) {
+                if (escaped) {
+                    escaped = false;
+                } else if (current == '\\') {
+                    escaped = true;
+                } else if (current == quote) {
+                    quote = 0;
+                }
+
+                result.setCharAt(i, ' ');
+            } else if (current == '\'' || current == '"') {
+                quote = current;
+                result.setCharAt(i, ' ');
+            }
+        }
+
+        return result.toString();
+    }
+
+    private char previousNonWhitespace(String text, int index) {
+        for (int i = index; i >= 0; i--) {
+            if (!Character.isWhitespace(text.charAt(i))) {
+                return text.charAt(i);
+            }
+        }
+
+        return '\0';
+    }
+
+    private int nextNonWhitespaceIndex(String text, int index) {
+        for (int i = index; i < text.length(); i++) {
+            if (!Character.isWhitespace(text.charAt(i))) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private boolean isDeclared(String varName) {
+        if (pythonContextVars.contains(varName)) return true;
+        for (Set<String> scope : scopeStack) {
+            if (scope.contains(varName)) return true;
         }
         return false;
     }
 
-    private boolean isVariableInGlobalScope(String name) {
-        if (scopeStack.isEmpty()) return false;
-        return scopeStack.getLast().contains(name); // النطاق العالمي في أسفل القائمة
+    private void validatePropertyChains(String expression, int line) {
+        Matcher matcher = PROPERTY_CHAIN_PATTERN.matcher(expression);
+        Set<String> checkedChains = new HashSet<>();
+
+        while (matcher.find()) {
+            String chain = matcher.group().replaceAll("\\s+", "");
+            if (!checkedChains.add(chain)) continue;
+
+            String[] parts = chain.split("\\.");
+            if (JINJA_BUILTINS.contains(parts[0].toLowerCase(Locale.ROOT))) continue;
+
+            Object value = resolveValue(parts[0]);
+            if (value == UNKNOWN_VALUE) continue;
+
+            for (int index = 1; index < parts.length; index++) {
+                if (value instanceof Map<?, ?>) {
+                    Map<?, ?> map = (Map<?, ?>) value;
+                    if (!map.containsKey(parts[index])) {
+                        errors.add(new SemanticError(
+                                "Unknown Property Error: Property '" + parts[index]
+                                        + "' does not exist on variable '" + parts[0] + "'.",
+                                line));
+                        break;
+                    }
+                    Object next = map.get(parts[index]);
+                    value = next == null ? UNKNOWN_VALUE : next;
+                } else if (value != null) {
+                    errors.add(new SemanticError(
+                            "Unknown Property Error: Value '" + parts[index - 1]
+                                    + "' has no property '" + parts[index] + "'.",
+                            line));
+                    break;
+                }
+            }
+        }
+    }
+
+    private Object inferExpressionValue(String expression) {
+        if (expression == null) return UNKNOWN_VALUE;
+        String value = expression.trim();
+        if ((value.startsWith("\"") && value.endsWith("\""))
+                || (value.startsWith("'") && value.endsWith("'"))) {
+            return value.substring(1, value.length() - 1);
+        }
+        if (value.matches("[-+]?\\d+(?:\\.\\d+)?")) {
+            try {
+                return Double.parseDouble(value);
+            } catch (NumberFormatException ignored) {
+                return UNKNOWN_VALUE;
+            }
+        }
+        if ("true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value)) {
+            return Boolean.parseBoolean(value);
+        }
+        return resolveSimpleExpression(value);
+    }
+
+    private Object resolveSimpleExpression(String expression) {
+        if (expression == null) return UNKNOWN_VALUE;
+        String value = expression.trim();
+        if (IDENTIFIER_PATTERN.matcher(value).matches()) {
+            return resolveValue(value);
+        }
+        return UNKNOWN_VALUE;
+    }
+
+    private Object resolveValue(String variable) {
+        for (Map<String, Object> scope : valueScopeStack) {
+            if (scope.containsKey(variable)) return scope.get(variable);
+        }
+        return pythonContextValues.getOrDefault(variable, UNKNOWN_VALUE);
+    }
+
+    private boolean isIterableValue(Object value) {
+        return value instanceof Collection<?>
+                || value instanceof Map<?, ?>
+                || (value != null && value.getClass().isArray());
+    }
+
+    private Object firstIterableValue(Object value) {
+        if (value == UNKNOWN_VALUE) return UNKNOWN_VALUE;
+        if (value instanceof List<?>) {
+            List<?> list = (List<?>) value;
+            return list.isEmpty() || list.get(0) == null ? UNKNOWN_VALUE : list.get(0);
+        }
+        if (value instanceof Collection<?>) {
+            Iterator<?> iterator = ((Collection<?>) value).iterator();
+            if (iterator.hasNext()) {
+                Object first = iterator.next();
+                return first == null ? UNKNOWN_VALUE : first;
+            }
+        }
+        return UNKNOWN_VALUE;
     }
 
     private void enterScope() {
         scopeStack.addFirst(new HashSet<>());
+        valueScopeStack.addFirst(new HashMap<>());
     }
 
     private void exitScope() {
-        if (scopeStack.size() > 1) {
-            scopeStack.removeFirst();
-        }
+        if (scopeStack.size() > 1) scopeStack.removeFirst();
+        if (valueScopeStack.size() > 1) valueScopeStack.removeFirst();
     }
 
-    public boolean hasErrors() {
-        return !errors.isEmpty();
-    }
+    public boolean hasErrors() { return !errors.isEmpty(); }
+    public List<SemanticError> getErrors() { return errors; }
 
     public void printResults() {
-        System.out.println("\n================================================");
-        System.out.println("--- Web Semantic Analysis Results ---");
-        System.out.println("================================================");
+        System.out.println("\n=== Web Semantic Analysis Results ===");
         if (errors.isEmpty()) {
-            System.out.println("✓ No semantic errors found in Web Template.");
+            System.out.println("✓ No semantic errors found in Web template.");
         } else {
-            System.out.println("✗ Found " + errors.size() + " web semantic error(s):\n");
-            for (SemanticError e : errors) {
-                e.report();
-            }
+            System.out.println("✗ Found " + errors.size() + " web semantic error(s):");
+            for (SemanticError e : errors) e.report();
         }
-        System.out.println("--------------------------------------------------");
     }
 }

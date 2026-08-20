@@ -1,4 +1,4 @@
-// Generated from D:/CompilerProjectRepo/CompilerProject1_IT4-main/src/Web/WebParser.g4 by ANTLR 4.13.2
+// Generated from src/Web/WebParser.g4 by ANTLR 4.13.2
 package Web;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -28,6 +28,16 @@ public interface WebParserListener extends ParseTreeListener {
 	 */
 	void exitHtmlContent(WebParser.HtmlContentContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link WebParser#htmlNode}.
+	 * @param ctx the parse tree
+	 */
+	void enterHtmlNode(WebParser.HtmlNodeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WebParser#htmlNode}.
+	 * @param ctx the parse tree
+	 */
+	void exitHtmlNode(WebParser.HtmlNodeContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code normalHtmlElement}
 	 * labeled alternative in {@link WebParser#htmlElement}.
 	 * @param ctx the parse tree
@@ -51,6 +61,18 @@ public interface WebParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSelfClosingHtmlElement(WebParser.SelfClosingHtmlElementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code voidHtmlElement}
+	 * labeled alternative in {@link WebParser#htmlElement}.
+	 * @param ctx the parse tree
+	 */
+	void enterVoidHtmlElement(WebParser.VoidHtmlElementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code voidHtmlElement}
+	 * labeled alternative in {@link WebParser#htmlElement}.
+	 * @param ctx the parse tree
+	 */
+	void exitVoidHtmlElement(WebParser.VoidHtmlElementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link WebParser#styleElement}.
 	 * @param ctx the parse tree
@@ -131,6 +153,56 @@ public interface WebParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitJinjaExpression(WebParser.JinjaExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link WebParser#jinjaSetStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterJinjaSetStatement(WebParser.JinjaSetStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WebParser#jinjaSetStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitJinjaSetStatement(WebParser.JinjaSetStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link WebParser#jinjaIfBlock}.
+	 * @param ctx the parse tree
+	 */
+	void enterJinjaIfBlock(WebParser.JinjaIfBlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WebParser#jinjaIfBlock}.
+	 * @param ctx the parse tree
+	 */
+	void exitJinjaIfBlock(WebParser.JinjaIfBlockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link WebParser#jinjaElifClause}.
+	 * @param ctx the parse tree
+	 */
+	void enterJinjaElifClause(WebParser.JinjaElifClauseContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WebParser#jinjaElifClause}.
+	 * @param ctx the parse tree
+	 */
+	void exitJinjaElifClause(WebParser.JinjaElifClauseContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link WebParser#jinjaElseClause}.
+	 * @param ctx the parse tree
+	 */
+	void enterJinjaElseClause(WebParser.JinjaElseClauseContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WebParser#jinjaElseClause}.
+	 * @param ctx the parse tree
+	 */
+	void exitJinjaElseClause(WebParser.JinjaElseClauseContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link WebParser#jinjaForBlock}.
+	 * @param ctx the parse tree
+	 */
+	void enterJinjaForBlock(WebParser.JinjaForBlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WebParser#jinjaForBlock}.
+	 * @param ctx the parse tree
+	 */
+	void exitJinjaForBlock(WebParser.JinjaForBlockContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link WebParser#jinjaStatement}.
 	 * @param ctx the parse tree
@@ -355,4 +427,24 @@ public interface WebParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNumberLiteral(WebParser.NumberLiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link WebParser#callArguments}.
+	 * @param ctx the parse tree
+	 */
+	void enterCallArguments(WebParser.CallArgumentsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WebParser#callArguments}.
+	 * @param ctx the parse tree
+	 */
+	void exitCallArguments(WebParser.CallArgumentsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link WebParser#callArgument}.
+	 * @param ctx the parse tree
+	 */
+	void enterCallArgument(WebParser.CallArgumentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WebParser#callArgument}.
+	 * @param ctx the parse tree
+	 */
+	void exitCallArgument(WebParser.CallArgumentContext ctx);
 }

@@ -59,38 +59,50 @@ public class PythonVisitor extends pythonParserBaseVisitor<ASTNode> {
     }
 
     @Override
-    public ASTNode visitSimple_stmt(pythonParser.Simple_stmtContext ctx) {
-
-        if (ctx.importStatement() != null) {
-            return visit(ctx.importStatement());
-        }
-        if (ctx.assignment() != null) {
-            return visit(ctx.assignment());
-        }
-        if (ctx.returnStatement() != null) {
-            return visit(ctx.returnStatement());
-        }
-        if (ctx.expressionStatement() != null) {
-            return visit(ctx.expressionStatement());
-        }
-        if (ctx.logic_expr() != null) {
-            return visit(ctx.logic_expr());
-        }
-        return null;
+    public ASTNode visitImportSimple(pythonParser.ImportSimpleContext ctx) {
+        return visit(ctx.importStatement());
     }
 
     @Override
-    public ASTNode visitCompound_stmt(pythonParser.Compound_stmtContext ctx) {
-        if (ctx.ifStatement() != null)
-            return visit(ctx.ifStatement());
-        if (ctx.whileStatement() != null)
-            return visit(ctx.whileStatement());
-        if (ctx.forStatement() != null)
-            return visit(ctx.forStatement());
-        if (ctx.functionDef() != null)
-            return visit(ctx.functionDef());
+    public ASTNode visitAssignmentSimple(pythonParser.AssignmentSimpleContext ctx) {
+        return visit(ctx.assignment());
+    }
 
-        return null;
+    @Override
+    public ASTNode visitReturnSimple(pythonParser.ReturnSimpleContext ctx) {
+        return visit(ctx.returnStatement());
+    }
+
+    @Override
+    public ASTNode visitExpressionSimple(pythonParser.ExpressionSimpleContext ctx) {
+        return visit(ctx.expressionStatement());
+    }
+
+    @Override
+    public ASTNode visitLogicExpressionSimple(
+            pythonParser.LogicExpressionSimpleContext ctx
+    ) {
+        return visit(ctx.logic_expr());
+    }
+
+    @Override
+    public ASTNode visitFunctionCompound(pythonParser.FunctionCompoundContext ctx) {
+        return visit(ctx.functionDef());
+    }
+
+    @Override
+    public ASTNode visitIfCompound(pythonParser.IfCompoundContext ctx) {
+        return visit(ctx.ifStatement());
+    }
+
+    @Override
+    public ASTNode visitWhileCompound(pythonParser.WhileCompoundContext ctx) {
+        return visit(ctx.whileStatement());
+    }
+
+    @Override
+    public ASTNode visitForCompound(pythonParser.ForCompoundContext ctx) {
+        return visit(ctx.forStatement());
     }
 
     @Override
@@ -306,14 +318,24 @@ public class PythonVisitor extends pythonParserBaseVisitor<ASTNode> {
             }
         }
 
+        int line = ctx.getStart().getLine();
         if (alias != null) {
-            symbolTable.define(alias, "Module (Alias)", ctx.getStart().getLine());
-        } else if (module != null) {
-            symbolTable.define(module, "Module", ctx.getStart().getLine());
+            symbolTable.define(alias, "Module (Alias)", line);
+        } else if (isFromImport) {
+            if (module != null) {
+                symbolTable.define(module, "Module", line);
+            }
+            for (String name : names) {
+                symbolTable.define(name, "Imported", line);
+            }
+        } else {
+            for (String name : names) {
+                symbolTable.define(name, "Module", line);
+            }
         }
 
         ImportStatement importStmt = new ImportStatement(isFromImport, module, names, alias, importAll);
-        importStmt.setLineNumber(ctx.getStart().getLine());
+        importStmt.setLineNumber(line);
         return importStmt;
     }
 
@@ -549,40 +571,32 @@ public class PythonVisitor extends pythonParserBaseVisitor<ASTNode> {
     @Override
     public ASTNode visitTestList_comp(pythonParser.TestList_compContext ctx) {
 
-        // حالة الـ comprehension: [x for x in items] أو [x for x in items if cond]
         if (ctx.comp_for() != null) {
             pythonParser.Comp_forContext cf = ctx.comp_for();
 
-            // إنشاء scope جديد للـ comprehension
             symbolTable = new PythonSymbolTable(symbolTable);
 
-            // تعريف متغير الـ loop
             String loopVar = cf.target().getText();
             symbolTable.define(loopVar, "Comprehension-Var", cf.getStart().getLine());
             comprehensionVars.add(loopVar);
 
-            // بناء العناصر
             Expression element  = (Expression) visit(ctx.expression(0));
             Expression iterable = (Expression) visit(cf.expression());
 
-            // هل عنده condition؟
             Expression condition = null;
             if (cf.comp_iter() != null && cf.comp_iter().IF() != null) {
                 condition = (Expression) visit(cf.comp_iter().expression());
             }
 
-            // ✅ في كلا الحالتين نبني ListExpression
             ListExpression listComp = new ListExpression(element, loopVar, iterable, condition);
             listComp.setLineNumber(ctx.getStart().getLine());
 
-            // نظّف الـ scope والـ comprehension var
             comprehensionVars.remove(loopVar);
             symbolTable = symbolTable.getParent();
 
             return listComp;
         }
 
-        // حالة القائمة العادية: [1, 2, 3] أو [x, y]
         List<Expression> elements = new ArrayList<>();
         for (pythonParser.ExpressionContext exprCtx : ctx.expression()) {
             ASTNode node = visit(exprCtx);
@@ -618,17 +632,26 @@ public class PythonVisitor extends pythonParserBaseVisitor<ASTNode> {
 
         for (pythonParser.TrailerContext tr : ctx.trailer()) {
             if (tr.LP() != null) {
-                List<Expression> args = new ArrayList<>();
+                FunctionCall call = new FunctionCall(expr);
+
                 if (tr.argList() != null) {
-                    for (pythonParser.ArgumentContext argCtx : tr.argList().argument()) {
-                        ASTNode argNode = visit(argCtx);
-                        if (argNode instanceof Argument) {
-                            args.add(((Argument) argNode).getValue());
+                    for (pythonParser.ArgumentContext argContext
+                            : tr.argList().argument()) {
+
+                        ASTNode argumentNode = visit(argContext);
+
+                        if (argumentNode instanceof Argument) {
+                            call.addArgument(
+                                    (Argument) argumentNode
+                            );
                         }
                     }
                 }
-                FunctionCall call = new FunctionCall(expr, args);
-                call.setLineNumber(tr.getStart().getLine());
+
+                call.setLineNumber(
+                        tr.getStart().getLine()
+                );
+
                 expr = call;
             } else if (tr.LC() != null) {
                 ASTNode idxNode = visit(tr.expression());

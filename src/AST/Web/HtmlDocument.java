@@ -10,9 +10,11 @@ public class HtmlDocument extends HtmlNode {
         super(line);
         this.children = new ArrayList<>();
     }
-    public  void addChild(HtmlNode node) {
+    public void addChild(HtmlNode node) {
         children.add(node);
     }
+
+    public ArrayList<HtmlNode> getChildren() { return children; } // مضافة للـ JSON
 
     @Override
     public String toString() {
@@ -23,5 +25,4 @@ public class HtmlDocument extends HtmlNode {
         }
         return sb.toString();
     }
-
 }

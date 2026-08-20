@@ -1,4 +1,4 @@
-// Generated from D:/CompilerProjectRepo/CompilerProject1_IT4-main/src/Web/WebParser.g4 by ANTLR 4.13.2
+// Generated from D:/Downloads/Telegram Desktop/Compiler2_Repo (2)/Compiler2_Repo/src/Web/WebParser.g4 by ANTLR 4.13.2
 package Web;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -23,6 +23,12 @@ public interface WebParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitHtmlContent(WebParser.HtmlContentContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link WebParser#htmlNode}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitHtmlNode(WebParser.HtmlNodeContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code normalHtmlElement}
 	 * labeled alternative in {@link WebParser#htmlElement}.
 	 * @param ctx the parse tree
@@ -36,6 +42,13 @@ public interface WebParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSelfClosingHtmlElement(WebParser.SelfClosingHtmlElementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code voidHtmlElement}
+	 * labeled alternative in {@link WebParser#htmlElement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVoidHtmlElement(WebParser.VoidHtmlElementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link WebParser#styleElement}.
 	 * @param ctx the parse tree
@@ -84,6 +97,36 @@ public interface WebParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitJinjaExpression(WebParser.JinjaExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WebParser#jinjaSetStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJinjaSetStatement(WebParser.JinjaSetStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WebParser#jinjaIfBlock}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJinjaIfBlock(WebParser.JinjaIfBlockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WebParser#jinjaElifClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJinjaElifClause(WebParser.JinjaElifClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WebParser#jinjaElseClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJinjaElseClause(WebParser.JinjaElseClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WebParser#jinjaForBlock}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJinjaForBlock(WebParser.JinjaForBlockContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link WebParser#jinjaStatement}.
 	 * @param ctx the parse tree
@@ -215,4 +258,16 @@ public interface WebParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitNumberLiteral(WebParser.NumberLiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WebParser#callArguments}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCallArguments(WebParser.CallArgumentsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WebParser#callArgument}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCallArgument(WebParser.CallArgumentContext ctx);
 }

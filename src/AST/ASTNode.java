@@ -43,4 +43,14 @@ public abstract class ASTNode {
     protected List<ASTNode> getChildren() {
         return Collections.emptyList();
     }
+
+    public final List<ASTNode> childNodes() {
+        List<ASTNode> children = getChildren();
+        return children == null ? Collections.emptyList() : children;
+    }
+
+    public final String nodeDetails() {
+        String details = getExtraInfo();
+        return details == null ? "" : details;
+    }
 }

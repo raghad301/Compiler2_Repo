@@ -6,12 +6,8 @@ import AST.Statement;
 import AST.parser_pkg.*;
 import SymbolTable.PythonSymbolTable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.File;
+import java.util.*;
 
 public class SemanticAnalyzer {
 
@@ -19,60 +15,57 @@ public class SemanticAnalyzer {
     private PythonSymbolTable currentScope;
     private final Map<String, Integer> functionParamCount = new HashMap<>();
 
-    // عشان نتتبع هل نحن جوا function أو لا (للـ Scope Error)
     private boolean insideFunction = false;
-
     private final Map<String, Set<String>> functionLocalVars = new HashMap<>();
     private String currentFunctionName = null;
 
-    // Flask variables المطلوبة لما يكون في Flask app
-    private static final Set<String> FLASK_REQUIRED = Set.of(
-            "Flask", "render_template", "request", "redirect", "url_for"
-    );
     private boolean hasFlaskImport = false;
     private boolean hasAppDefined = false;
 
-    //  نقطة البداية 
-
     public void analyze(Program program) {
         currentScope = new PythonSymbolTable();
+        errors.clear();
+
         firstPass(program);
 
         for (Statement stmt : program.getStatements()) {
             analyzeStatement(stmt);
         }
 
-        // CHECK 5: Missing Flask Variables
-        checkFlaskVariables(program);
-
+        checkFlaskVariables();
         printResults();
     }
 
-    //  المرحلة الأولى: تسجيل الدوال 
-
     private void firstPass(Program program) {
+        Set<String> declaredFunctions = new HashSet<>();
+
         for (Statement stmt : program.getStatements()) {
             if (stmt instanceof FunctionDef) {
                 FunctionDef func = (FunctionDef) stmt;
-                int paramCount = func.parameters != null
-                        ? func.parameters.getParameters().size() : 0;
+
+                // [Error 3] تكرار تعريف دالة في نفس النطاق
+                if (declaredFunctions.contains(func.name)) {
+                    errors.add(new SemanticError(
+                            "Duplicate Function Error: Function '" + func.name + "' is already defined in this scope.",
+                            func.getLineNumber()
+                    ));
+                } else {
+                    declaredFunctions.add(func.name);
+                }
+
+                int paramCount = func.parameters != null ? func.parameters.getParameters().size() : 0;
                 functionParamCount.put(func.name, paramCount);
                 currentScope.define(func.name, "Function", func.getLineNumber());
             }
-            // نتحقق من Flask import بالمرحلة الأولى
+
             if (stmt instanceof ImportStatement) {
                 ImportStatement imp = (ImportStatement) stmt;
                 if ("flask".equalsIgnoreCase(imp.getModule())) {
                     hasFlaskImport = true;
                 }
-                if (imp.getNames() != null && imp.getNames().contains("Flask")) {
-                    hasFlaskImport = true;
-                }
             }
         }
     }
-
-    //  تحليل الـ Statements
 
     private void analyzeStatement(Statement stmt) {
         if (stmt instanceof Assignment) {
@@ -94,8 +87,6 @@ public class SemanticAnalyzer {
         }
     }
 
-    //  Assignment 
-
     private void analyzeAssignment(Assignment stmt) {
         String valueType = analyzeExpression(stmt.getValue());
         Target target = stmt.getTarget();
@@ -103,19 +94,15 @@ public class SemanticAnalyzer {
             String varName = target.toString();
             currentScope.define(varName, valueType, stmt.getLineNumber());
 
-            // نتتبع المتغيرات المحلية جوا الـ function
             if (insideFunction && currentFunctionName != null) {
                 functionLocalVars.get(currentFunctionName).add(varName);
             }
 
-            // نتحقق إذا app اتعرّف
             if ("app".equals(varName)) {
                 hasAppDefined = true;
             }
         }
     }
-
-    //  FunctionDef 
 
     private void analyzeFunctionDef(FunctionDef stmt) {
         PythonSymbolTable funcScope = new PythonSymbolTable(currentScope);
@@ -143,10 +130,7 @@ public class SemanticAnalyzer {
         currentScope = savedScope;
         insideFunction = savedInsideFunction;
         currentFunctionName = savedFunctionName;
-        // ✅ ما نمسح functionLocalVars — تضل محفوظة للفحص لاحقاً
     }
-
-    //  IfStatement 
 
     private void analyzeIfStatement(IfStatement stmt) {
         analyzeExpression(stmt.getCondition());
@@ -164,32 +148,35 @@ public class SemanticAnalyzer {
         }
     }
 
-    //  ForStatement 
-
     private void analyzeForStatement(ForStatement stmt) {
         if (stmt.getIterator() != null) {
-            currentScope.define(stmt.getIterator(), "Variable", stmt.getLineNumber());
-            if (insideFunction && currentFunctionName != null) {
-                functionLocalVars.get(currentFunctionName).add(stmt.getIterator()); // ✅
-            }
-            analyzeExpression(stmt.getIterable());
-
-            // CHECK: Scope Error — نعمل scope جديد للـ for body
+            // إنشاء نطاق الحلقة أولاً
             PythonSymbolTable forScope = new PythonSymbolTable(currentScope);
             PythonSymbolTable savedScope = currentScope;
             currentScope = forScope;
 
-            if (stmt.getBody() != null) analyzeBlock(stmt.getBody());
+            // تعريف متغير الحلقة داخل نطاق الحلقة الجديد
+            currentScope.define(stmt.getIterator(), "Loop-Iterator", stmt.getLineNumber());
 
+            // تحليل القiterable في النطاق الخارجي أو الحالي
+            analyzeExpression(stmt.getIterable());
+
+            // تحليل جسم الحلقة
+            if (stmt.getBody() != null) {
+                analyzeBlock(stmt.getBody());
+            }
+
+            // العودة للنطاق السابق
             currentScope = savedScope;
+
+            // تعريف المتغير أيضاً في النطاق الحالي لضمان رؤيته في الـ Context الخارجي
+            currentScope.define(stmt.getIterator(), "Variable", stmt.getLineNumber());
         }
     }
-    //  WhileStatement 
 
     private void analyzeWhileStatement(WhileStatement stmt) {
         analyzeExpression(stmt.getCondition());
 
-        // CHECK: Scope Error — نعمل scope جديد للـ while body
         PythonSymbolTable whileScope = new PythonSymbolTable(currentScope);
         PythonSymbolTable savedScope = currentScope;
         currentScope = whileScope;
@@ -199,28 +186,19 @@ public class SemanticAnalyzer {
         currentScope = savedScope;
     }
 
-    //  ReturnStatement 
-
     private void analyzeReturnStatement(ReturnStatement stmt) {
-        // CHECK: Scope Error — return برا function
         if (!insideFunction) {
-            errors.add(new SemanticError(
-                    "Scope Error: 'return' statement used outside of a function",
-                    stmt.getLineNumber()
-            ));
+            errors.add(new SemanticError("Scope Error: 'return' statement used outside function", stmt.getLineNumber()));
         }
         if (stmt.getValue() != null) {
             analyzeExpression(stmt.getValue());
         }
     }
 
-    //  ImportStatement 
-
     private void analyzeImport(ImportStatement stmt) {
         if (stmt.getModule() != null) {
             currentScope.define(stmt.getModule(), "Module", stmt.getLineNumber());
         }
-        // نسجّل الـ names المستوردة كمان
         if (stmt.getNames() != null) {
             for (String name : stmt.getNames()) {
                 currentScope.define(name, "Imported", stmt.getLineNumber());
@@ -231,15 +209,11 @@ public class SemanticAnalyzer {
         }
     }
 
-    //  Block 
-
     private void analyzeBlock(Block block) {
         for (Statement stmt : block.getStatements()) {
             analyzeStatement(stmt);
         }
     }
-
-    //  تحليل الـ Expressions 
 
     private String analyzeExpression(Expression expr) {
         if (expr == null) return "Unknown";
@@ -249,205 +223,174 @@ public class SemanticAnalyzer {
         if (expr instanceof BooleanLiteral) return "Boolean";
         if (expr instanceof NoneLiteral)    return "None";
 
-        if (expr instanceof Identifier) {
-            return analyzeIdentifier((Identifier) expr);
-        }
-        if (expr instanceof BinaryExpression) {
-            return analyzeBinaryExpression((BinaryExpression) expr);
-        }
-        if (expr instanceof FunctionCall) {
-            return analyzeFunctionCall((FunctionCall) expr);
-        }
+        if (expr instanceof Identifier)       return analyzeIdentifier((Identifier) expr);
+        if (expr instanceof BinaryExpression) return analyzeBinaryExpression((BinaryExpression) expr);
+        if (expr instanceof FunctionCall)     return analyzeFunctionCall((FunctionCall) expr);
+
         if (expr instanceof ListExpression) {
-            for (Expression elem : ((ListExpression) expr).getElements()) {
-                analyzeExpression(elem);
+            ListExpression list = (ListExpression) expr;
+
+            if (list.getLoopVariable() != null) {
+                // الـiterable يُفحص قبل تعريف متغير الـcomprehension
+                analyzeExpression(list.getIterable());
+
+                PythonSymbolTable savedScope = currentScope;
+                currentScope = new PythonSymbolTable(savedScope);
+
+                try {
+                    currentScope.define(
+                            list.getLoopVariable(),
+                            "Comprehension-Var",
+                            list.getLineNumber()
+                    );
+
+                    for (Expression element : list.getElements()) {
+                        analyzeExpression(element);
+                    }
+
+                    analyzeExpression(list.getCondition());
+
+                } finally {
+                    currentScope = savedScope;
+                }
+
+            } else {
+                for (Expression element : list.getElements()) {
+                    analyzeExpression(element);
+                }
             }
+
             return "List";
         }
-        if (expr instanceof DictExpression) {
-            for (DictEntry entry : ((DictExpression) expr).getEntries()) {
-                analyzeExpression(entry.getKey());
-                analyzeExpression(entry.getValue());
-            }
-            return "Dict";
-        }
-
         if (expr instanceof MemberAccess) {
             analyzeExpression(((MemberAccess) expr).getObject());
             return "Unknown";
         }
+
         if (expr instanceof IndexExpression) {
-            IndexExpression ie = (IndexExpression) expr;
-            analyzeExpression(ie.getObject());
-            analyzeExpression(ie.getIndex());
+            IndexExpression indexExpression =
+                    (IndexExpression) expr;
+
+            analyzeExpression(indexExpression.getObject());
+            analyzeExpression(indexExpression.getIndex());
             return "Unknown";
         }
+
         if (expr instanceof UnaryExpression) {
-            return analyzeExpression(((UnaryExpression) expr).getOperand());
-        }
-        if (expr instanceof ConditionalExpression) {
-            ConditionalExpression ce = (ConditionalExpression) expr;
-            analyzeExpression(ce.getCondition());
-            analyzeExpression(ce.getThenExpr());
-            analyzeExpression(ce.getElseExpr());
+            analyzeExpression(
+                    ((UnaryExpression) expr).getOperand()
+            );
             return "Unknown";
+        }
+
+        if (expr instanceof ConditionalExpression) {
+            ConditionalExpression conditional =
+                    (ConditionalExpression) expr;
+
+            analyzeExpression(conditional.getCondition());
+            analyzeExpression(conditional.getThenExpr());
+            analyzeExpression(conditional.getElseExpr());
+            return "Unknown";
+        }
+
+        if (expr instanceof DictExpression) {
+            DictExpression dictionary =
+                    (DictExpression) expr;
+
+            for (DictEntry entry : dictionary.getEntries()) {
+                analyzeExpression(entry.getKey());
+                analyzeExpression(entry.getValue());
+            }
+
+            return "Dict";
         }
 
         return "Unknown";
     }
 
-    //  CHECK 1: Undefined Variable 
-
     private String analyzeIdentifier(Identifier expr) {
         String name = expr.getName();
+
         PythonSymbolTable.Symbol symbol = currentScope.lookup(name);
 
+        // [Error 1] متغير غير معرف
         if (symbol == null) {
-            errors.add(new SemanticError(
-                    "Undefined Variable: '" + name + "' is used before being declared",
-                    expr.getLineNumber()
-            ));
+            errors.add(new SemanticError("Undefined Variable: '" + name + "' is used before being declared.", expr.getLineNumber()));
             return "Unknown";
         }
-
-        // CHECK 3: Scope Error — متغير محلي مستخدم برا الـ function
-        if (!insideFunction) {
-            for (Map.Entry<String, Set<String>> entry : functionLocalVars.entrySet()) {
-                if (entry.getValue().contains(name)) {
-                    errors.add(new SemanticError(
-                            "Scope Error: '" + name + "' is local to function '"
-                                    + entry.getKey() + "' and cannot be used outside it",
-                            expr.getLineNumber()
-                    ));
-                    break;
-                }
-            }
-        }
-
         return symbol.type;
     }
-
-    //  CHECK 2: Type Mismatch 
 
     private String analyzeBinaryExpression(BinaryExpression expr) {
         String leftType  = analyzeExpression(expr.getLeft());
         String rightType = analyzeExpression(expr.getRight());
         String op        = expr.getOperator();
 
-        if (op.equals("+") || op.equals("-") || op.equals("*") || op.equals("/")) {
-            if (!leftType.equals("Unknown") && !rightType.equals("Unknown")) {
-                if ((leftType.equals("String") && rightType.equals("Number"))
-                        || (leftType.equals("Number") && rightType.equals("String"))
-                        || (leftType.equals("Boolean") && rightType.equals("Number"))
-                        || (leftType.equals("Number") && rightType.equals("Boolean"))) {
-                    errors.add(new SemanticError(
-                            "Type Mismatch: cannot apply '" + op +
-                                    "' between '" + leftType + "' and '" + rightType + "'",
-                            expr.getLineNumber()
-                    ));
-                    return "Unknown";
-                }
+        // [Error 5] القسمة على صفر
+        if ("/".equals(op) && expr.getRight() instanceof NumberLiteral) {
+            NumberLiteral num = (NumberLiteral) expr.getRight();
+            if (num.getValue() == 0) {
+                errors.add(new SemanticError("Arithmetic Error: Division by zero is strictly prohibited.", expr.getLineNumber()));
             }
-            if (leftType.equals("String") && rightType.equals("String") && op.equals("+")) {
-                return "String";
-            }
-            return "Number";
         }
 
-        if (op.equals("==") || op.equals("!=") ||
-                op.equals("<")  || op.equals(">")  ||
-                op.equals("<=") || op.equals(">=")) {
-            return "Boolean";
+        // [Error 4] عدم توافق الأنواع في العمليات
+        if ("+".equals(op) || "-".equals(op) || "*".equals(op) || "/".equals(op)) {
+            if (("String".equals(leftType) && "Number".equals(rightType)) ||
+                    ("Number".equals(leftType) && "String".equals(rightType))) {
+                errors.add(new SemanticError("Type Mismatch: Cannot perform '" + op + "' between '" + leftType + "' and '" + rightType + "'.", expr.getLineNumber()));
+            }
         }
-
         return "Unknown";
     }
 
-    //  CHECK 3 & 4: Undeclared Function + Wrong Param Count 
-
     private String analyzeFunctionCall(FunctionCall expr) {
-        int argCount = 0;
-        for (Expression arg : expr.getArguments()) {
-            analyzeExpression(arg);
-            argCount++;
-        }
-
+        analyzeExpression(expr.getCallee());
         String funcName = null;
         if (expr.getCallee() instanceof Identifier) {
             funcName = ((Identifier) expr.getCallee()).getName();
-        } else {
-            analyzeExpression(expr.getCallee());
-            return "Unknown";
         }
 
-        PythonSymbolTable.Symbol symbol = currentScope.lookup(funcName);
-        if (symbol == null) {
-            errors.add(new SemanticError(
-                    "Undefined Function: '" + funcName + "' is called but never declared",
-                    expr.getLineNumber()
-            ));
-            return "Unknown";
-        }
+        // [Error 2] التحقق من وجود القالب عند استدعاء render_template
+        if ("render_template".equals(funcName) && !expr.getArguments().isEmpty()) {
+            Expression firstArg = expr.getArguments().get(0);
+            if (firstArg instanceof StringLiteral) {
+                String templateName = ((StringLiteral) firstArg).getValue();
+                File tFile = new File("input/templates", templateName);
 
-        if (functionParamCount.containsKey(funcName)) {
-            int expectedCount = functionParamCount.get(funcName);
-            if (argCount != expectedCount) {
-                errors.add(new SemanticError(
-                        "Type Error: function '" + funcName + "' expects " +
-                                expectedCount + " argument(s) but got " + argCount,
-                        expr.getLineNumber()
-                ));
+                if (!tFile.isFile()) {
+                    errors.add(new SemanticError(
+                            "Missing Template Error: Template file '" + templateName
+                                    + "' was not found in input/templates.",
+                            expr.getLineNumber()
+                    ));
+                }
             }
+        }
+
+        for (Expression arg : expr.getArguments()) {
+            analyzeExpression(arg);
         }
 
         return "Unknown";
     }
 
-    //  CHECK 5: Missing Flask Variables 
-
-    private void checkFlaskVariables(Program program) {
-        if (!hasFlaskImport) return; // مش Flask project
-
-        // نتحقق إنو app اتعرّف
-        if (!hasAppDefined) {
-            errors.add(new SemanticError(
-                    "Missing Flask Variable: 'app = Flask(__name__)' is required but not found",
-                    1
-            ));
-        }
-
-        // نتحقق إنو الـ Flask functions المستوردة موجودة بالـ symbol table
-        for (String flaskVar : FLASK_REQUIRED) {
-            if (currentScope.lookup(flaskVar) == null) {
-                errors.add(new SemanticError(
-                        "Missing Flask Variable: '" + flaskVar +
-                                "' is used but not imported from flask",
-                        1
-                ));
-            }
+    private void checkFlaskVariables() {
+        if (hasFlaskImport && !hasAppDefined) {
+            errors.add(new SemanticError("Missing Flask Component: 'app = Flask(__name__)' is missing.", 1));
         }
     }
 
-    //  النتيجة 
-
-    public boolean hasErrors() {
-        return !errors.isEmpty();
-    }
-
-    public List<SemanticError> getErrors() {
-        return errors;
-    }
+    public boolean hasErrors() { return !errors.isEmpty(); }
+    public List<SemanticError> getErrors() { return errors; }
 
     public void printResults() {
-        System.out.println("\n=== Semantic Analysis Results ===");
+        System.out.println("\n=== Python Semantic Analysis Results ===");
         if (errors.isEmpty()) {
-            System.out.println("✓ No semantic errors found.");
+            System.out.println("✓ No semantic errors found in Python code.");
         } else {
-            System.out.println("✗ Found " + errors.size() + " semantic error(s):\n");
-            for (SemanticError e : errors) {
-                e.report();
-            }
+            System.out.println("✗ Found " + errors.size() + " semantic error(s):");
+            for (SemanticError e : errors) e.report();
         }
-        System.out.println("===\n");
     }
 }

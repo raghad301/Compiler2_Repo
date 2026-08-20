@@ -1,4 +1,4 @@
-// Generated from D:/CompilerProjectRepo/CompilerProject1_IT4-main/src/parser_pkg/pythonParser.g4 by ANTLR 4.13.2
+// Generated from D:/Downloads/Telegram Desktop/Compiler2_Repo (2)/Compiler2_Repo/src/parser_pkg/pythonParser.g4 by ANTLR 4.13.2
 package parser_pkg;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -23,17 +23,68 @@ public interface pythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(pythonParser.StatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link pythonParser#simple_stmt}.
+	 * Visit a parse tree produced by the {@code importSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSimple_stmt(pythonParser.Simple_stmtContext ctx);
+	T visitImportSimple(pythonParser.ImportSimpleContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link pythonParser#compound_stmt}.
+	 * Visit a parse tree produced by the {@code assignmentSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCompound_stmt(pythonParser.Compound_stmtContext ctx);
+	T visitAssignmentSimple(pythonParser.AssignmentSimpleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code returnSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturnSimple(pythonParser.ReturnSimpleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code expressionSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpressionSimple(pythonParser.ExpressionSimpleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code logicExpressionSimple}
+	 * labeled alternative in {@link pythonParser#simple_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLogicExpressionSimple(pythonParser.LogicExpressionSimpleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code functionCompound}
+	 * labeled alternative in {@link pythonParser#compound_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionCompound(pythonParser.FunctionCompoundContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ifCompound}
+	 * labeled alternative in {@link pythonParser#compound_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfCompound(pythonParser.IfCompoundContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code whileCompound}
+	 * labeled alternative in {@link pythonParser#compound_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhileCompound(pythonParser.WhileCompoundContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code forCompound}
+	 * labeled alternative in {@link pythonParser#compound_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForCompound(pythonParser.ForCompoundContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link pythonParser#importStatement}.
 	 * @param ctx the parse tree

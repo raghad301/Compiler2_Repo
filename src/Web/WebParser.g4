@@ -9,18 +9,26 @@ htmlDocument
 
 
 htmlContent
-    : ( htmlElement
-      | styleElement
-      | scriptElement
-      | jinjaExpression
-      | jinjaStatement
-      | HTML_TEXT
-      )*
+    : htmlNode*
+    ;
+
+htmlNode
+    : htmlElement
+    | styleElement
+    | scriptElement
+    | jinjaIfBlock
+    | jinjaForBlock
+    | jinjaSetStatement
+    | jinjaExpression
+    | HTML_TEXT
+    | HTML_COMMENT
+    | DOCTYPE
     ;
 
 htmlElement
     : TAG_OPEN TAG_NAME attribute* TAG_CLOSE htmlContent TAG_OPEN TAG_SLASH TAG_NAME TAG_CLOSE  #normalHtmlElement
-    | TAG_OPEN TAG_NAME attribute* TAG_SLASH_CLOSE  # selfClosingHtmlElement
+    | TAG_OPEN (TAG_NAME | VOID_TAG_NAME) attribute* TAG_SLASH_CLOSE                            #selfClosingHtmlElement
+    | TAG_OPEN VOID_TAG_NAME attribute* TAG_CLOSE                                                #voidHtmlElement
     ;
 
 
@@ -34,7 +42,7 @@ scriptElement
     ;
 
 attribute
-    : TAG_NAME ( TAG_EQUALS attributeValue )?
+    : (TAG_NAME | JINJA_NAME) ( TAG_EQUALS attributeValue )?
     ;
 
 
@@ -88,6 +96,54 @@ jinjaExpression
     : JINJA_EXPR_START expression JINJA_EXPR_END
     ;
 
+jinjaSetStatement
+    : JINJA_STMT_START
+      SETKW JINJA_NAME ASSIGN expression
+      JINJA_STMT_END
+    ;
+
+jinjaIfBlock
+    : JINJA_STMT_START
+      IFKW condition=expression
+      JINJA_STMT_END
+
+      thenBody=htmlContent
+
+      jinjaElifClause*
+      jinjaElseClause?
+
+      JINJA_STMT_START
+      ENDIFKW
+      JINJA_STMT_END
+    ;
+
+jinjaElifClause
+    : JINJA_STMT_START
+      ELIFKW condition=expression
+      JINJA_STMT_END
+
+      body=htmlContent
+    ;
+
+jinjaElseClause
+    : JINJA_STMT_START
+      ELSEKW
+      JINJA_STMT_END
+
+      body=htmlContent
+    ;
+
+jinjaForBlock
+    : JINJA_STMT_START
+      FORKW variable=JINJA_NAME IN iterable=expression
+      JINJA_STMT_END
+
+      body=htmlContent
+
+      JINJA_STMT_START
+      ENDFORKW
+      JINJA_STMT_END
+    ;
 
 jinjaStatement
     : JINJA_STMT_START jinjaStatementBody JINJA_STMT_END
@@ -95,13 +151,13 @@ jinjaStatement
 
 
 jinjaStatementBody
-    : IFKW expression            #jinjaIf
-    | ELIFKW expression          #jinjaElif
-    | ELSEKW                     #jinjaElse
-    | ENDIFKW                    #jinjaEndIf
+    : IFKW expression                    #jinjaIf
+    | ELIFKW expression                  #jinjaElif
+    | ELSEKW                             #jinjaElse
+    | ENDIFKW                            #jinjaEndIf
     | FORKW JINJA_NAME IN expression     #jinjaFor
-    | ENDFORKW                     #jinjaEndFor
-    | SETKW JINJA_NAME ASSIGN expression  #jinjaSet
+    | ENDFORKW                           #jinjaEndFor
+    | SETKW JINJA_NAME ASSIGN expression #jinjaSet
     ;
 
 
@@ -116,7 +172,7 @@ logicalAndExpression
 
 
 comparisonExpression
-    : simpleExpression ( (EQ | NEQ | GT | LT | GTE | LTE) simpleExpression )?  #comparisonExpr
+    : simpleExpression ( (EQ | NEQ | GT | LT | GTE | LTE | IN) simpleExpression )?  #comparisonExpr
     ;
 
 simpleExpression
@@ -128,13 +184,22 @@ term
     ;
 
 factor
-    : primary
+    : (NOTKW | PLUS | MINUS)* primary
     ;
 
 primary
     : JINJA_NUMBER                            #numberLiteral
     | JINJA_STRING                            #stringLiteral
-    | JINJA_NAME (DOT JINJA_NAME)*            #variableExpr
+    | JINJA_NAME (DOT JINJA_NAME | LBRACKET expression RBRACKET)*
+      (LPAREN callArguments? RPAREN)?          #variableExpr
     | LPAREN expression RPAREN                #parenExpr
     | primary PIPE JINJA_NAME                 #filterExpr
+    ;
+
+callArguments
+    : callArgument (COMMA callArgument)* COMMA?
+    ;
+
+callArgument
+    : (JINJA_NAME ASSIGN)? expression
     ;

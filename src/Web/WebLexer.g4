@@ -3,10 +3,10 @@ lexer grammar WebLexer;
 
 tokens {
     PLUS, MINUS, STAR, SLASH, DIV, MOD,
-    LPAREN, RPAREN, DOT, COMMA,
+    LPAREN, RPAREN, LBRACKET, RBRACKET, DOT, COMMA,
     EQ, NEQ, GT, LT, GTE, LTE,
     IFKW, ELIFKW, ELSEKW, ENDIFKW, FORKW, ENDFORKW, SETKW, IN,
-    ANDKW, ORKW,
+    ANDKW, ORKW, NOTKW,
     ASSIGN,
     PIPE,
     TAG_EQUALS, ATTVALUE_TEXT,
@@ -15,7 +15,8 @@ tokens {
     JINJA_NAME, JINJA_NUMBER, JINJA_STRING
 }
 
-HTML_COMMENT: ' ' -> skip;
+HTML_COMMENT: '<!--' .*? '-->' -> skip;
+DOCTYPE: '<!' [Dd][Oo][Cc][Tt][Yy][Pp][Ee] [ \t\r\n]+ [Hh][Tt][Mm][Ll] [ \t\r\n]* '>';
 STYLE_OPEN: '<style' .*? '>' -> pushMode(STYLE);
 SCRIPT_OPEN: '<script' .*? '>' -> pushMode(SCRIPT);
 JINJA_EXPR_START: '{{' -> pushMode(JEXPR);
@@ -29,9 +30,15 @@ mode TAG;
 TAG_CLOSE: '>' -> popMode;
 TAG_SLASH_CLOSE: '/>' -> popMode;
 TAG_SLASH: '/';
+VOID_TAG_NAME
+    : [Aa][Rr][Ee][Aa] | [Bb][Aa][Ss][Ee] | [Bb][Rr] | [Cc][Oo][Ll]
+    | [Ee][Mm][Bb][Ee][Dd] | [Hh][Rr] | [Ii][Mm][Gg] | [Ii][Nn][Pp][Uu][Tt]
+    | [Ll][Ii][Nn][Kk] | [Mm][Ee][Tt][Aa] | [Ss][Oo][Uu][Rr][Cc][Ee]
+    | [Tt][Rr][Aa][Cc][Kk] | [Ww][Bb][Rr]
+    ;
 TAG_EQUALS_DQ: '=' [ \t\r\n]* '"' -> type(TAG_EQUALS), pushMode(ATTR_DQ);
 TAG_EQUALS_SQ: '=' [ \t\r\n]* '\'' -> type(TAG_EQUALS), pushMode(ATTR_SQ);
-TAG_NAME: [A-Za-z_:] [A-Za-z0-9_:\\-\\.]*;
+TAG_NAME: [A-Za-z_:] [A-Za-z0-9_:.-]*;
 TAG_WHITESPACE: [ \t\r\n]+ -> skip;
 
 
@@ -80,15 +87,20 @@ mode JEXPR;
 JEXPR_END: '}}' -> popMode, type(JINJA_EXPR_END);
 JEXPR_WS: [ \t\r\n]+ -> skip;
 
+JEXPR_AND: 'and' -> type(ANDKW);
+JEXPR_OR: 'or' -> type(ORKW);
+JEXPR_NOT: 'not' -> type(NOTKW);
+JEXPR_IN: 'in' -> type(IN);
 JINJA_NAME: [A-Za-z_][A-Za-z0-9_]*;
 JINJA_NUMBER: [0-9]+ ('.' [0-9]+)?;
 JINJA_STRING: '"' (~["\r\n])* '"' | '\'' (~['\r\n])* '\'';
 
 EQ: '=='; NEQ: '!='; GTE: '>='; LTE: '<=';
 GT: '>'; LT: '<';
+JEXPR_ASSIGN: '=' -> type(ASSIGN);
 DIV: '//';
 
-LPAREN: '('; RPAREN: ')'; COMMA: ',';
+LPAREN: '('; RPAREN: ')'; LBRACKET: '['; RBRACKET: ']'; COMMA: ',';
 PIPE: '|' ;
 DOT: '.'; MOD: '%'; PLUS: '+'; MINUS: '-'; STAR: '*'; SLASH: '/';
 
@@ -103,6 +115,7 @@ JSTMT_WS: [ \t\r\n]+ -> skip;
 JSTMT_IF: 'if' -> type(IFKW); JSTMT_ELIF: 'elif' -> type(ELIFKW); JSTMT_ELSE: 'else' -> type(ELSEKW); JSTMT_ENDIF: 'endif' -> type(ENDIFKW); JSTMT_FOR: 'for' -> type(FORKW); JSTMT_ENDFOR: 'endfor' -> type(ENDFORKW); JSTMT_SET: 'set' -> type(SETKW); JSTMT_IN: 'in' -> type(IN);
 JSTMT_AND: 'and' -> type(ANDKW);
 JSTMT_OR: 'or' -> type(ORKW);
+JSTMT_NOT: 'not' -> type(NOTKW);
 
 
 JSTMT_EQ: '==' -> type(EQ); JSTMT_NEQ: '!=' -> type(NEQ); JSTMT_GTE: '>=' -> type(GTE); JSTMT_LTE: '<=' -> type(LTE); JSTMT_GT: '>' -> type(GT); JSTMT_LT: '<' -> type(LT);
@@ -112,6 +125,7 @@ JSTMT_ASSIGN: '=' -> type(ASSIGN);
 
 JSTMT_PLUS: '+' -> type(PLUS); JSTMT_MINUS: '-' -> type(MINUS); JSTMT_STAR: '*' -> type(STAR); JSTMT_SLASH: '/' -> type(SLASH); JSTMT_DIV: '//' -> type(DIV); JSTMT_MOD: '%' -> type(MOD);
 JSTMT_LPAREN: '(' -> type(LPAREN); JSTMT_RPAREN: ')' -> type(RPAREN); JSTMT_DOT: '.' -> type(DOT); JSTMT_COMMA: ',' -> type(COMMA);
+JSTMT_LBRACKET: '[' -> type(LBRACKET); JSTMT_RBRACKET: ']' -> type(RBRACKET);
 JSTMT_PIPE: '|' -> type(PIPE);
 
 

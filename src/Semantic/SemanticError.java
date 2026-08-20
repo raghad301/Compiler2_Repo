@@ -10,7 +10,7 @@ public class SemanticError {
     }
 
     public void report() {
-        System.err.println("Semantic Error at line " + line + ": " + message);
+        System.err.println("Semantic Error [Line " + line + "]: " + message);
     }
 
     public String getMessage() { return message; }
@@ -18,6 +18,6 @@ public class SemanticError {
 
     @Override
     public String toString() {
-        return "SemanticError(line=" + line + ", msg=\"" + message + "\")";
+        return "SemanticError(Line " + line + ": " + message + ")";
     }
 }

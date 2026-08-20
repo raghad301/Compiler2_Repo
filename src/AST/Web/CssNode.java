@@ -1,12 +1,7 @@
 package AST.Web;
 
-public abstract class CssNode {
-    public int line;
-    public int column;
-
+public abstract class CssNode extends HtmlNode {
     public CssNode(int line) {
-        this.line = line;
+        super(line);
     }
-    @Override
-    public abstract String toString() ;
 }

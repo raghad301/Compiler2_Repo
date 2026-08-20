@@ -4,25 +4,44 @@ import AST.ASTNode;
 import AST.Expression;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FunctionCall extends Expression {
 
-    private Expression callee;
-    private List<Expression> arguments;
+    private final Expression callee;
+    private final List<Argument> argumentNodes;
 
     public FunctionCall(Expression callee) {
         this.callee = callee;
-        this.arguments = new ArrayList<>();
+        this.argumentNodes = new ArrayList<>();
     }
 
-    public FunctionCall(Expression callee, List<Expression> arguments) {
-        this.callee = callee;
-        this.arguments = arguments;
+    public FunctionCall(
+            Expression callee,
+            List<Expression> arguments
+    ) {
+        this(callee);
+
+        if (arguments != null) {
+            for (Expression argument : arguments) {
+                addArgument(argument);
+            }
+        }
     }
 
     public void addArgument(Expression argument) {
-        this.arguments.add(argument);
+        if (argument != null) {
+            argumentNodes.add(
+                    new Argument(argument)
+            );
+        }
+    }
+
+    public void addArgument(Argument argument) {
+        if (argument != null) {
+            argumentNodes.add(argument);
+        }
     }
 
     public Expression getCallee() {
@@ -30,20 +49,31 @@ public class FunctionCall extends Expression {
     }
 
     public List<Expression> getArguments() {
-        return arguments;
+        List<Expression> values = new ArrayList<>();
+
+        for (Argument argument : argumentNodes) {
+            values.add(argument.getValue());
+        }
+
+        return values;
+    }
+
+    public List<Argument> getArgumentNodes() {
+        return Collections.unmodifiableList(
+                argumentNodes
+        );
     }
 
     @Override
     public List<ASTNode> getChildren() {
         List<ASTNode> children = new ArrayList<>();
-        if (callee != null) children.add(callee);
-        if (arguments != null) {
-            for (Expression arg : arguments) {
-                if (arg != null) children.add(arg);
-            }
+
+        if (callee != null) {
+            children.add(callee);
         }
+
+        children.addAll(argumentNodes);
+
         return children;
     }
-
 }
-
